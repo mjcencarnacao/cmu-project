@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">LibrarIST</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign up</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="welcome_back">Welcome\nBack</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="todo">TODO</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="name">Name</string>
+    <string name="lets_get_started">Lets Get\nStarted</string>
+    <string name="loading">Loading...</string>
+</resources>

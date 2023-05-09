@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "454528530257",
+    "project_id": "librarist-d0d59",
+    "storage_bucket": "librarist-d0d59.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454528530257:android:300fe17cfc4e5365654570",
+        "android_client_info": {
+          "package_name": "com.cmu.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454528530257-nc2h4tkaoemsuf23bmla7h6rdqbf1okt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg-3bpUDFmpEKv5USwIw8xCPYC4rtkjhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454528530257-nc2h4tkaoemsuf23bmla7h6rdqbf1okt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
