@@ -23,15 +23,14 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".core.activities.MainActivity"
+            android:name=".core.activities.StartupActivity"
             android:exported="false"
             android:theme="@style/splashScreenTheme" />
         <activity
-            android:name=".core.activities.StartupActivity"
+            android:name=".core.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

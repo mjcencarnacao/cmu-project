@@ -20,6 +20,9 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         binding.ivMaps.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_mapsFragment)
         }
+        binding.ivBookSearch.setOnClickListener {
+            findNavController().navigate(R.id.action_dashboardFragment_to_bookSearchFragment)
+        }
     }
 
 }

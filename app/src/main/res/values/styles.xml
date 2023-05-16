@@ -9,6 +9,35 @@
         <item name="android:layout_marginStart">@dimen/small_margin</item>
     </style>
 
+    <style name="DialogText" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/small_text</item>
+        <item name="android:layout_marginTop">@dimen/large_margin</item>
+        <item name="android:layout_marginStart">@dimen/medium_margin</item>
+    </style>
+
+    <style name="ImageButton">
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+    </style>
+
+    <style name="RatingBar">
+        <item name="android:numStars">5</item>
+        <item name="android:rating">0</item>
+        <item name="android:scaleX">0.4</item>
+        <item name="android:scaleY">0.4</item>
+        <item name="android:stepSize">1</item>
+        <item name="android:progressTint">@android:color/holo_orange_dark</item>
+        <item name="android:progressBackgroundTint">@android:color/darker_gray</item>
+        <item name="android:layout_marginStart">-30dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+    </style>
+
     <style name="SmallTextView" parent="TitleTextView">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/small_text</item>

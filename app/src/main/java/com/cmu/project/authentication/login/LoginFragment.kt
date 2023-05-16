@@ -9,6 +9,8 @@ import androidx.navigation.fragment.findNavController
 import com.cmu.project.R
 import com.cmu.project.core.activities.MainActivity
 import com.cmu.project.databinding.FragmentLoginBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -21,6 +23,9 @@ class LoginFragment : Fragment(R.layout.fragment_login), LoginContract.View {
         binding = FragmentLoginBinding.bind(view)
         presenter = LoginPresenter(this)
         setOnClickListeners()
+        FirebaseAuth.getInstance().currentUser?.let {
+            startMainActivity()
+        } ?: throw FirebaseAuthException(LoginPresenter.HOLDER.TAG, "Failed to Authenticate to Firebase.")
     }
 
     private fun setOnClickListeners() {

@@ -12,10 +12,18 @@
         <action
             android:id="@+id/action_dashboardFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_bookSearchFragment"
+            app:destination="@id/bookSearchFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
         android:name="com.cmu.project.main.maps.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" />
+    <fragment
+        android:id="@+id/bookSearchFragment"
+        android:name="com.cmu.project.main.search.BookSearchFragment"
+        android:label="fragment_book_search"
+        tools:layout="@layout/fragment_book_search" />
 </navigation>

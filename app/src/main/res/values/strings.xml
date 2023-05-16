@@ -11,4 +11,13 @@
     <string name="name">Name</string>
     <string name="lets_get_started">Lets Get\nStarted</string>
     <string name="loading">Loading...</string>
+    <string name="location">Location</string>
+    <string name="add_library">Add Library</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="library_name">Library Name</string>
+    <string name="more_details">More Details</string>
+    <string name="add_library_description">The following Location will be used to add a new library to the system. To proceed press submit after filling the details.</string>
+    <string name="library_title">Library Title</string>
 </resources>
