@@ -20,4 +20,10 @@
     <string name="more_details">More Details</string>
     <string name="add_library_description">The following Location will be used to add a new library to the system. To proceed press submit after filling the details.</string>
     <string name="library_title">Library Title</string>
+    <string name="search_books">Search Books</string>
+    <string name="share">Share</string>
+    <string name="report_a_bug">Report a Bug</string>
+    <string name="logout">Logout</string>
+    <string name="account">Account</string>
+    <string name="communication">Communication</string>
 </resources>
