@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -41,6 +42,7 @@ class MapsFragment : Fragment(), MapsContract.View,
 
     override lateinit var presenter: MapsPresenter
     private lateinit var binding: FragmentMapsBinding
+    private lateinit var dialog: CustomDialogFragment
 
     @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
@@ -109,9 +111,10 @@ class MapsFragment : Fragment(), MapsContract.View,
 
     override fun setupLibraryDetailsFragment(googleMap: GoogleMap) {
         googleMap.setOnMapClickListener { coordinate ->
-            val dialog: CustomDialogFragment? = activity?.let { CustomDialogFragment(it) }
-            dialog?.setupAddLibraryDialog()
-            dialog?.binding?.btnAction?.setOnClickListener {
+            findNavController().navigate(R.id.customDialogFragment)
+
+            dialog.setupAddLibraryDialog()
+            dialog.binding.btnAction.setOnClickListener {
                 dialog.addLibrary(
                     GeoPoint(coordinate.latitude, coordinate.longitude)
                 )
@@ -119,8 +122,10 @@ class MapsFragment : Fragment(), MapsContract.View,
         }
 
         googleMap.setOnMarkerClickListener { marker ->
-            val dialog: CustomDialogFragment? = activity?.let { CustomDialogFragment(it) }
-            marker.title?.let { dialog?.setLibraryName(it) }
+            marker.title?.let {
+                val action = MapsFragmentDirections.actionMapsFragmentToCustomDialogFragment(it)
+                findNavController().navigate(action)
+            }
             true
         }
     }
@@ -140,6 +145,7 @@ class MapsFragment : Fragment(), MapsContract.View,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dialog = CustomDialogFragment()
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
         presenter = MapsPresenter(this)
