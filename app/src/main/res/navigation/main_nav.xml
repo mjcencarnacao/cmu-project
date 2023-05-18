@@ -17,5 +17,18 @@
         android:id="@+id/bookSearchFragment"
         android:name="com.cmu.project.main.search.BookSearchFragment"
         android:label="fragment_book_search"
-        tools:layout="@layout/fragment_book_search" />
+        tools:layout="@layout/fragment_book_search" >
+        <action
+            android:id="@+id/action_bookSearchFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookDetailsFragment"
+        android:name="com.cmu.project.main.details.book.BookDetailsFragment"
+        android:label="fragment_book_detail"
+        tools:layout="@layout/fragment_book_details" >
+        <argument
+            android:name="book"
+            app:argType="string" />
+    </fragment>
 </navigation>

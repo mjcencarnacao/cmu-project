@@ -3,11 +3,13 @@ package com.cmu.project.core.dialog
 import android.app.Activity
 import android.content.Intent
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat.startActivityForResult
 import com.cmu.project.R
 import com.cmu.project.core.Constants.CAMERA_REQUEST_CODE
 import com.cmu.project.databinding.CustomDialogBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.firestore.GeoPoint
 

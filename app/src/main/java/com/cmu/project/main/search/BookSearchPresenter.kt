@@ -14,6 +14,7 @@ class BookSearchPresenter {
 
     private var storage = FirebaseStorage.getInstance().reference
     private var bookList = mutableListOf<Book>()
+    private var fullBookList = mutableListOf<Book>()
 
     fun getBookCount() = bookList.size
 
@@ -34,12 +35,21 @@ class BookSearchPresenter {
 
     fun getFilteredBookList(query: String) {
         val filtered = mutableListOf<Book>()
-        bookList.forEach { book -> if (book.title.contains(query)) filtered.add(book) }
+        fullBookList.forEach {
+                book -> if (book.title.lowercase().contains(query.lowercase())) filtered.add(book)
+        }
         this.bookList = filtered
     }
 
     fun updateList(list: MutableList<Book>) {
         this.bookList = list
+
+        if (fullBookList.isEmpty())
+            fullBookList = list
+    }
+
+    fun getBookAtPosition(position: Int): Book {
+        return bookList[position]
     }
 
 }

@@ -62,7 +62,6 @@ class MapsFragment : Fragment(), MapsContract.View,
         else ActivityCompat.requestPermissions(requireActivity(), arrayOf(ACCESS_FINE_LOCATION), 1)
     }
 
-
     override fun setupMapSearchView(googleMap: GoogleMap) {
         binding.svMapSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
