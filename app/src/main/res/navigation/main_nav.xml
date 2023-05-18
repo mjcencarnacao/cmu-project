@@ -29,7 +29,7 @@
 
     <fragment
         android:id="@+id/bookDetailsFragment"
-        android:name="com.cmu.project.main.details.book.libraries.BookDetailsFragment"
+        android:name="com.cmu.project.main.details.book.BookDetailsFragment"
         android:label="fragment_book_detail"
         tools:layout="@layout/fragment_book_details">
         <argument
@@ -42,8 +42,17 @@
         android:name="com.cmu.project.core.dialog.CustomDialogFragment"
         android:label="CustomDialogFragment">
         <argument
-            android:name="title"
+            android:name="isAdd"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="libraryTitle"
+            android:defaultValue=""
             app:argType="string" />
+        <argument
+            android:name="coordinates"
+            app:argType="string"
+            app:nullable="true" />
     </dialog>
 
 </navigation>

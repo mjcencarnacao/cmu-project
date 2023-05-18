@@ -1,8 +1,10 @@
 package com.cmu.project.main.search.book
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.cmu.project.R
@@ -31,8 +33,8 @@ class BookSearchAdapter(private val presenter: BookSearchPresenter) :
         // Go to book details
         holder.itemView.setOnClickListener {
             val selectedBook = Gson().toJson(presenter.getBookAtPosition(position))
-            val action = BookSearchFragmentDirections.actionBookSearchFragmentToBookDetailsFragment(selectedBook)
-            it.findNavController().navigate(action)
+            val bundle = Bundle().apply {  putString("book", selectedBook) }
+            it.findNavController().navigate(R.id.bookDetailsFragment, bundle)
         }
     }
 

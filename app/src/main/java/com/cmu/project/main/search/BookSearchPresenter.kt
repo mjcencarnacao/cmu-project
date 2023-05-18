@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 
 class BookSearchPresenter {
 
@@ -27,10 +28,12 @@ class BookSearchPresenter {
     }
 
     private suspend fun getCoverImageFromRemote(book: Book): Uri? {
-        Log.e("Nigaa", book.id)
-        val url = storage.child("books/" + book.id + ".jpg").downloadUrl.await()
-        Log.e("Nigaa", url.toString())
-        return url
+        try {
+            return storage.child("books/" + book.id + ".jpg").downloadUrl.await()
+        } catch (e : Exception){
+
+        }
+        return null
     }
 
     fun getFilteredBookList(query: String) {

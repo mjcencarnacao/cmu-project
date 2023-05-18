@@ -10,7 +10,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="name">Name</string>
     <string name="lets_get_started">Lets Get\nStarted</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="location">Location</string>
     <string name="add_library">Add Library</string>
 
@@ -26,4 +26,6 @@
     <string name="logout">Logout</string>
     <string name="account">Account</string>
     <string name="communication">Communication</string>
+    <string name="books_available">Books Available</string>
+    <string name="library_dialog_description">To add or remove a book from the library simply use the buttons above. Libraries can be added to user favourites. Bellow there is a list of the books available.</string>
 </resources>

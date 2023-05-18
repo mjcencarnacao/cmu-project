@@ -1,6 +1,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_gravity="bottom"
     android:layout_height="600dp"
     android:background="@drawable/rounded_corner">
 
@@ -105,61 +107,63 @@
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
             android:fontFamily="@font/poppins_regular"
-            android:text="@string/add_library_description"
+            android:text="@string/library_dialog_description"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tvLibraryName"
             app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
+        <TextView
+            android:id="@+id/tvBooksTitle"
+            style="@style/DialogText"
+            android:layout_marginTop="@dimen/small_margin"
+            android:fontFamily="@font/poppins_regular"
+            android:text="@string/books_available"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBooks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginEnd="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvBooksTitle"
+            tools:listitem="@layout/item_book" />
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            style="@style/ImageButton"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginBottom="35dp"
+            android:background="@drawable/circle2"
+            android:contentDescription="@string/todo"
+            android:src="@drawable/ic_back"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rvBooks" />
+
+        <Button
+            android:id="@+id/btnAction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="40dp"
+            android:backgroundTint="@color/yellow_icon"
+            android:text="@string/more_details"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/btn_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_back"
+            app:layout_constraintTop_toTopOf="@id/btn_back" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/tvBooksTitle"
-        style="@style/DialogText"
-        android:layout_marginTop="@dimen/small_margin"
-        android:fontFamily="@font/poppins_regular"
-        android:text="Books Available"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvBooks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginEnd="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvBooksTitle" />
-
-    <ImageButton
-        android:id="@+id/btn_back"
-        style="@style/ImageButton"
-        android:layout_marginTop="@dimen/medium_margin"
-        android:layout_marginBottom="35dp"
-        android:background="@drawable/circle2"
-        android:contentDescription="@string/todo"
-        android:src="@drawable/ic_back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tvBooksTitle"
-        app:layout_constraintTop_toBottomOf="@+id/rvBooks" />
-
-    <Button
-        android:id="@+id/btnAction"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="40dp"
-        android:backgroundTint="@color/yellow_icon"
-        android:text="@string/more_details"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/btn_back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_back"
-        app:layout_constraintTop_toTopOf="@id/btn_back" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

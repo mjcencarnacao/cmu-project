@@ -8,9 +8,8 @@ import com.google.android.gms.maps.GoogleMap
 interface MapsContract {
 
     interface View : BaseView<MapsPresenter> {
-        fun setupMapSearchView(googleMap : GoogleMap)
-        fun setupLibraryMarkers(googleMap : GoogleMap)
-        fun setupLibraryDetailsFragment(googleMap : GoogleMap)
+        fun setupListeners(googleMap: GoogleMap)
+        fun setupLibraryMarkers(googleMap: GoogleMap)
     }
 
     interface Presenter : BasePresenter {
