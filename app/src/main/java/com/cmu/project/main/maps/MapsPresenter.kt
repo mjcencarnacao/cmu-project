@@ -12,10 +12,12 @@ class MapsPresenter(private val view: MapsContract.View) : MapsContract.Presente
     override suspend fun retrieveLibrariesFromCloud(): List<Library> {
         val libraries = mutableListOf<Library>()
         val snapshot = libraryCollection.get().await()
-        snapshot.forEach { document -> libraries.add(document.toObject(Library::class.java)) }
+        snapshot.forEach { document ->
+            val lib = document.toObject(Library::class.java)
+            lib.id = document.id
+            libraries.add(lib)
+        }
         return libraries
     }
-
-
 
 }

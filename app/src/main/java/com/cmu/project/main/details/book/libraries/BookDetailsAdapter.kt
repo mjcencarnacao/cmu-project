@@ -1,13 +1,19 @@
 package com.cmu.project.main.details.book.libraries
 
 import android.annotation.SuppressLint
+import android.location.Location
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.cmu.project.R
 import com.cmu.project.core.models.Library
+import com.cmu.project.main.details.book.BookDetailsFragment
+import com.cmu.project.main.details.book.BookDetailsFragmentDirections
 import com.cmu.project.main.details.book.BookDetailsPresenter
+import com.cmu.project.main.maps.MapsFragmentDirections
 import com.google.gson.Gson
 
 @SuppressLint("NotifyDataSetChanged")
@@ -29,7 +35,8 @@ class BookDetailsAdapter(private val presenter: BookDetailsPresenter) : Recycler
         // Probably to request directions to the library
         holder.itemView.setOnClickListener {
             val selectedLibrary = Gson().toJson(presenter.getLibraryAtPosition(position))
-            Log.i("Adapter", selectedLibrary)
+            val action = BookDetailsFragmentDirections.actionBookDetailsFragmentToCustomDialogFragment(library = selectedLibrary, coordinates = null)
+            holder.itemView.findNavController().navigate(action)
         }
     }
 

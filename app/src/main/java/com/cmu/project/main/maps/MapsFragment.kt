@@ -1,6 +1,7 @@
 package com.cmu.project.main.maps
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap.createScaledBitmap
 import android.graphics.BitmapFactory.decodeResource
 import android.location.Geocoder
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.cmu.project.R
+import com.cmu.project.core.activities.StartupActivity
 import com.cmu.project.databinding.FragmentMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -24,6 +26,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions.loadRawResourceStyle
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,6 +44,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
         mapFragment?.getMapAsync(callback)
         presenter = MapsPresenter(this)
         binding = FragmentMapsBinding.bind(view)
+        FirebaseAuth.getInstance().signInWithEmailAndPassword("miguel.encarnacao@tecnico.ulisboa.pt", "12345678")
     }
 
     @SuppressLint("MissingPermission")
@@ -65,13 +70,14 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
         })
 
         googleMap.setOnMapClickListener { position ->
-            val action = MapsFragmentDirections.actionMapsFragmentToCustomDialogFragment(isAdd = true, coordinates = Gson().toJson(position))
+            val action = MapsFragmentDirections.actionMapsFragmentToCustomDialogFragment(isAdd = true, library = "", coordinates = Gson().toJson(position))
             findNavController().navigate(action)
         }
 
         googleMap.setOnMarkerClickListener { marker ->
-            marker.title?.let { title ->
-                val action = MapsFragmentDirections.actionMapsFragmentToCustomDialogFragment(libraryTitle = title, coordinates = null)
+            marker.tag?.let { data ->
+                val lib = Gson().toJson(data)
+                val action = MapsFragmentDirections.actionMapsFragmentToCustomDialogFragment(library = lib, coordinates = null)
                 findNavController().navigate(action)
             }
             true
@@ -80,11 +86,13 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
         binding.navView.setNavigationItemSelectedListener(this)
 
         binding.btnMenu.setOnClickListener { binding.drawerLayout.openDrawer(Gravity.LEFT) }
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.navSearch -> findNavController().navigate(R.id.action_mapsFragment_to_bookSearchFragment)
+            // R.id.navLogout ->
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true
@@ -96,6 +104,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
                 val position = LatLng(library.location.latitude, library.location.longitude)
                 withContext(Dispatchers.Main) {
                     val marker = googleMap.addMarker(MarkerOptions().position(position).title(library.name))
+                    marker?.tag = library
                     val icon = createScaledBitmap(decodeResource(requireContext().resources, R.drawable.iv_search), 80, 80, false)
                     marker?.setIcon(fromBitmap(icon))
                 }

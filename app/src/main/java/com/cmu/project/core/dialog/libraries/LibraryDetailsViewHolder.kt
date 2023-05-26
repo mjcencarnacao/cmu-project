@@ -1,4 +1,4 @@
-package com.cmu.project.main.search.book
+package com.cmu.project.core.dialog.libraries
 
 import android.net.Uri
 import android.util.Log
@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.cmu.project.databinding.ItemBookBinding
 import com.cmu.project.main.search.BookSearchContract
 
-class BookSearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), BookSearchContract.BookView {
+class LibraryDetailsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), BookSearchContract.BookView {
 
     private var binding: ItemBookBinding = ItemBookBinding.bind(itemView)
 

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmu.project.R
 import com.cmu.project.core.models.Book
 import com.cmu.project.databinding.FragmentBookSearchBinding
+import com.cmu.project.core.dialog.libraries.LibraryDetailsAdapter
 import com.cmu.project.main.search.book.BookSearchAdapter
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
