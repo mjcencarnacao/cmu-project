@@ -1,17 +1,9 @@
 package com.cmu.project.main.maps
 
-import androidx.lifecycle.lifecycleScope
 import com.cmu.project.core.models.Library
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class MapsPresenter(private val view: MapsContract.View) : MapsContract.Presenter {
 
@@ -20,7 +12,11 @@ class MapsPresenter(private val view: MapsContract.View) : MapsContract.Presente
     override suspend fun retrieveLibrariesFromCloud(): List<Library> {
         val libraries = mutableListOf<Library>()
         val snapshot = libraryCollection.get().await()
-        snapshot.forEach { document -> libraries.add(document.toObject(Library::class.java)) }
+        snapshot.forEach { document ->
+            val lib = document.toObject(Library::class.java)
+            lib.id = document.id
+            libraries.add(lib)
+        }
         return libraries
     }
 

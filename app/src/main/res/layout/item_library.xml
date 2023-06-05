@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:background="@color/white"
-    android:layout_height="wrap_content">
+    android:layout_height="175dp">
 
     <ImageView
         android:id="@+id/container"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/item_book_img"
+        android:id="@+id/item_library_img"
         android:layout_width="100dp"
         android:layout_height="150dp"
         android:layout_marginStart="24dp"
@@ -33,48 +33,48 @@
 
     <TextView
         android:textStyle="bold"
-        android:id="@+id/item_book_title"
+        android:id="@+id/item_library_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:text="An American Marriage"
-        app:layout_constraintStart_toEndOf="@+id/item_book_img"
+        android:text="Library Name"
+        app:layout_constraintStart_toEndOf="@+id/item_library_img"
         app:layout_constraintTop_toTopOf="@+id/container" />
 
     <TextView
-        android:id="@+id/item_book_author"
+        android:id="@+id/item_library_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        android:text="By Tayari Jones"
-        app:layout_constraintStart_toEndOf="@+id/item_book_img"
-        app:layout_constraintTop_toBottomOf="@+id/item_book_title" />
+        android:text="Distance from the user"
+        app:layout_constraintStart_toEndOf="@+id/item_library_img"
+        app:layout_constraintTop_toBottomOf="@+id/item_library_name" />
 
     <RatingBar
         style="?android:attr/ratingBarStyleSmall"
-        android:id="@+id/item_book_ratingbar"
+        android:id="@+id/item_library_ratingbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/item_book_img"
-        app:layout_constraintTop_toBottomOf="@+id/item_book_author" />
+        app:layout_constraintStart_toEndOf="@+id/item_library_img"
+        app:layout_constraintTop_toBottomOf="@+id/item_library_location" />
 
     <TextView
-        android:id="@+id/item_book_score"
+        android:id="@+id/item_library_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="score"
-        app:layout_constraintBottom_toBottomOf="@+id/item_book_ratingbar"
-        app:layout_constraintStart_toEndOf="@+id/item_book_ratingbar"
-        app:layout_constraintTop_toTopOf="@+id/item_book_ratingbar" />
+        android:text="Score"
+        app:layout_constraintBottom_toBottomOf="@+id/item_library_ratingbar"
+        app:layout_constraintStart_toEndOf="@+id/item_library_ratingbar"
+        app:layout_constraintTop_toTopOf="@+id/item_library_ratingbar" />
 
     <ImageView
         android:id="@+id/imageView3"
