@@ -42,6 +42,10 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
 }
 
 dependencies {
@@ -69,15 +73,15 @@ dependencies {
      * Navigation Component
      * https://developer.android.com/guide/navigation/navigation-getting-started
      */
-    implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
-    implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.6.0"
+    implementation "androidx.navigation:navigation-ui-ktx:2.6.0"
 
     /**
      * Firebase Dependencies
      * https://firebase.google.com/docs/android/android-play-services
      */
     implementation 'com.google.firebase:firebase-auth-ktx:22.0.0'
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.6.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.6.1'
     implementation 'com.google.firebase:firebase-storage-ktx:20.2.0'
 
     /**
@@ -85,6 +89,7 @@ dependencies {
      * https://square.github.io/retrofit/
      */
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     /**
      * Glide
@@ -98,6 +103,19 @@ dependencies {
      */
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
+
+    /**
+     * Machine Learning Vision Model
+     * https://developers.google.com/ml-kit/vision/barcode-scanning/android
+     */
+    implementation 'com.google.mlkit:barcode-scanning:17.1.0'
+
+    /**
+     * Google Books API
+     * https://developers.google.com/books
+     */
+    implementation 'com.google.api-client:google-api-client-android:1.31.5'
+
 }
 
 kapt {

@@ -1,7 +1,6 @@
 package com.cmu.project.main.maps
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Bitmap.createScaledBitmap
 import android.graphics.BitmapFactory.decodeResource
 import android.location.Geocoder
@@ -15,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.cmu.project.R
-import com.cmu.project.core.activities.StartupActivity
 import com.cmu.project.databinding.FragmentMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -27,13 +25,13 @@ import com.google.android.gms.maps.model.MapStyleOptions.loadRawResourceStyle
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, NavigationView.OnNavigationItemSelectedListener {
+class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
+    NavigationView.OnNavigationItemSelectedListener {
 
     override lateinit var presenter: MapsPresenter
     private lateinit var binding: FragmentMapsBinding
@@ -44,7 +42,8 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
         mapFragment?.getMapAsync(callback)
         presenter = MapsPresenter(this)
         binding = FragmentMapsBinding.bind(view)
-        FirebaseAuth.getInstance().signInWithEmailAndPassword("miguel.encarnacao@tecnico.ulisboa.pt", "12345678")
+        FirebaseAuth.getInstance()
+            .signInWithEmailAndPassword("miguel.encarnacao@tecnico.ulisboa.pt", "12345678")
     }
 
     @SuppressLint("MissingPermission")
@@ -61,7 +60,12 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val location = binding.svMapSearch.query.toString()
                 context?.let { Geocoder(it) }?.getFromLocationName(location, 1)?.let { list ->
-                    if (list.isNotEmpty()) googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(list[0].latitude, list[0].longitude), 25F))
+                    if (list.isNotEmpty()) googleMap.animateCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            LatLng(list[0].latitude, list[0].longitude),
+                            25F
+                        )
+                    )
                 }
                 return false
             }
@@ -70,14 +74,20 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
         })
 
         googleMap.setOnMapClickListener { position ->
-            val action = MapsFragmentDirections.actionMapsFragmentToCustomDialogFragment(isAdd = true, library = "", coordinates = Gson().toJson(position))
+            val action = MapsFragmentDirections.actionMapsFragmentToAddLibraryFragment(
+                library = "",
+                coordinates = Gson().toJson(position)
+            )
             findNavController().navigate(action)
         }
 
         googleMap.setOnMarkerClickListener { marker ->
             marker.tag?.let { data ->
                 val lib = Gson().toJson(data)
-                val action = MapsFragmentDirections.actionMapsFragmentToCustomDialogFragment(library = lib, coordinates = null)
+                val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(
+                    library = lib,
+                    coordinates = null
+                )
                 findNavController().navigate(action)
             }
             true
@@ -103,9 +113,15 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
             presenter.retrieveLibrariesFromCloud().forEach { library ->
                 val position = LatLng(library.location.latitude, library.location.longitude)
                 withContext(Dispatchers.Main) {
-                    val marker = googleMap.addMarker(MarkerOptions().position(position).title(library.name))
+                    val marker =
+                        googleMap.addMarker(MarkerOptions().position(position).title(library.name))
                     marker?.tag = library
-                    val icon = createScaledBitmap(decodeResource(requireContext().resources, R.drawable.iv_search), 80, 80, false)
+                    val icon = createScaledBitmap(
+                        decodeResource(
+                            requireContext().resources,
+                            R.drawable.iv_search
+                        ), 80, 80, false
+                    )
                     marker?.setIcon(fromBitmap(icon))
                 }
             }

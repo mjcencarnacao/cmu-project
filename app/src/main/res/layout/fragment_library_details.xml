@@ -1,14 +1,167 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".main.details.library.LibraryDetailsFragment">
+    android:layout_height="600dp"
+    android:layout_gravity="bottom"
+    android:background="@drawable/rounded_corner">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <View
+            android:layout_width="100dp"
+            android:layout_height="5dp"
+            android:layout_marginTop="15dp"
+            android:background="#D8D8D8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvLibraryName"
+            style="@style/DialogText"
+            android:fontFamily="@font/poppins_regular"
+            android:text="@string/library_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/RatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/tvLibraryRating"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvLibraryRating" />
+
+        <TextView
+            android:id="@+id/tvLibraryRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-60dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/ratingBar"
+            app:layout_constraintTop_toBottomOf="@id/tvLibraryName" />
+
+        <ImageButton
+            android:id="@+id/btnLibraryFavourite"
+            style="@style/ImageButton"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/circle"
+            android:contentDescription="@string/todo"
+            android:src="@drawable/ic_favorite"
+            app:layout_constraintBottom_toBottomOf="@id/tvLibraryRating"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvLibraryName" />
+
+        <ImageButton
+            android:id="@+id/btnRemoveBook"
+            style="@style/ImageButton"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="60dp"
+            android:background="@drawable/circle"
+            android:contentDescription="@string/todo"
+            android:src="@drawable/ic_remove"
+            app:layout_constraintBottom_toBottomOf="@id/tvLibraryRating"
+            app:layout_constraintEnd_toEndOf="@+id/btnLibraryFavourite"
+            app:layout_constraintTop_toTopOf="@id/tvLibraryName" />
+
+        <ImageButton
+            android:id="@+id/btnAddBook"
+            style="@style/ImageButton"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="60dp"
+            android:background="@drawable/circle"
+            android:contentDescription="@string/todo"
+            android:src="@drawable/ic_add"
+            app:layout_constraintBottom_toBottomOf="@id/tvLibraryRating"
+            app:layout_constraintEnd_toEndOf="@+id/btnRemoveBook"
+            app:layout_constraintTop_toTopOf="@id/tvLibraryName" />
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:fontFamily="@font/poppins_regular"
+            android:text="@string/library_dialog_description"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvLibraryName"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/navigationHelper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginEnd="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDescription">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/ic_menu_mylocation" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location, dummy bla bla bla"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/mapView"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tvBooksTitle"
+            style="@style/DialogText"
+            android:layout_marginTop="@dimen/small_margin"
+            android:fontFamily="@font/poppins_regular"
+            android:text="@string/books_available"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/navigationHelper" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBooks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginEnd="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvBooksTitle"
+            tools:listitem="@layout/item_book" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

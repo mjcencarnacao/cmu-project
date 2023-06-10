@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav"
     app:startDestination="@id/mapsFragment">
+
     <fragment
         android:id="@+id/mapsFragment"
         android:name="com.cmu.project.main.maps.MapsFragment"
@@ -13,8 +14,11 @@
             android:id="@+id/action_mapsFragment_to_bookSearchFragment"
             app:destination="@id/bookSearchFragment" />
         <action
-            android:id="@+id/action_mapsFragment_to_customDialogFragment"
-            app:destination="@id/customDialogFragment" />
+            android:id="@+id/action_mapsFragment_to_libraryDetailsFragment"
+            app:destination="@id/libraryDetailsFragment" />
+        <action
+            android:id="@+id/action_mapsFragment_to_addLibraryFragment"
+            app:destination="@id/addLibraryFragment" />
     </fragment>
 
     <fragment
@@ -29,25 +33,21 @@
 
     <fragment
         android:id="@+id/bookDetailsFragment"
-        android:name="com.cmu.project.main.details.book.BookDetailsFragment"
+        android:name="com.cmu.project.main.book.details.BookDetailsFragment"
         android:label="fragment_book_detail"
         tools:layout="@layout/fragment_book_details">
         <argument
             android:name="book"
             app:argType="string" />
         <action
-            android:id="@+id/action_bookDetailsFragment_to_customDialogFragment"
-            app:destination="@id/customDialogFragment" />
+            android:id="@+id/action_bookDetailsFragment_to_libraryDetailsFragment"
+            app:destination="@id/libraryDetailsFragment" />
     </fragment>
 
     <dialog
-        android:id="@+id/customDialogFragment"
-        android:name="com.cmu.project.core.dialog.CustomDialogFragment"
-        android:label="CustomDialogFragment">
-        <argument
-            android:name="isAdd"
-            android:defaultValue="false"
-            app:argType="boolean" />
+        android:id="@+id/libraryDetailsFragment"
+        android:name="com.cmu.project.main.library.details.LibraryDetailsFragment"
+        android:label="LibraryDetailsFragment">
         <argument
             android:name="library"
             app:argType="string" />
@@ -59,6 +59,35 @@
             android:id="@+id/action_customDialogFragment_to_bookDetailsFragment2"
             app:destination="@id/bookDetailsFragment"
             app:launchSingleTop="false" />
+        <action
+            android:id="@+id/action_libraryDetailsFragment_to_addBookFragment"
+            app:destination="@id/addBookFragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/addLibraryFragment"
+        android:name="com.cmu.project.main.library.add.AddLibraryFragment"
+        android:label="AddLibraryFragment">
+        <argument
+            android:name="library"
+            app:argType="string" />
+        <argument
+            android:name="coordinates"
+            app:argType="string"
+            app:nullable="true" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/addBookFragment"
+        android:name="com.cmu.project.main.book.add.AddBookFragment"
+        android:label="AddBookFragment">
+        <argument
+            android:name="library"
+            app:argType="string" />
+        <argument
+            android:name="coordinates"
+            app:argType="string"
+            app:nullable="true" />
     </dialog>
 
 </navigation>
