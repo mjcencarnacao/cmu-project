@@ -13,7 +13,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import com.cmu.project.R
 import com.cmu.project.databinding.FragmentAddBookBinding
-import com.cmu.project.main.book.AddBookFragmentArgs
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import java.io.File

@@ -11,7 +11,6 @@ import com.cmu.project.R
 import com.cmu.project.core.models.Book
 import com.cmu.project.databinding.FragmentBookDetailsBinding
 import com.cmu.project.main.book.details.libraries.BookDetailsAdapter
-import com.cmu.project.main.details.book.BookDetailsFragmentArgs
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope

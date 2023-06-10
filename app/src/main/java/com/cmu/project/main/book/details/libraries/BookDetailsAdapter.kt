@@ -7,7 +7,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.cmu.project.R
 import com.cmu.project.core.models.Library
-import com.cmu.project.main.details.book.BookDetailsFragmentDirections
+import com.cmu.project.main.book.details.BookDetailsFragmentDirections
 import com.cmu.project.main.book.details.BookDetailsPresenter
 import com.google.gson.Gson
 
