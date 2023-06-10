@@ -65,8 +65,8 @@ class AddBookFragment : DialogFragment(R.layout.fragment_add_book), AddBookContr
     }
 
     private fun setOnClickListeners() {
-        binding.btnAction.setOnClickListener { presenter.addBookToFirebaseWithoutCode(binding.etBookName.text.toString(), bookImage!!) }
-
+        binding.btnAction.setOnClickListener { presenter.addBookToFirebaseWithoutCode(binding.etBookName.text.toString(), bookImage) }
+        
         binding.btnBookImage.setOnClickListener { generateCameraIntent() }
     }
 

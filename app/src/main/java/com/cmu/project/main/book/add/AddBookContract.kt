@@ -15,7 +15,7 @@ interface AddBookContract {
     interface Presenter : BasePresenter {
         fun addBookToFirebaseWithCode(id: String)
         fun addBookToLibrary(documentReference: DocumentReference)
-        fun addBookToFirebaseWithoutCode(name: String, bitmap: Bitmap)
+        fun addBookToFirebaseWithoutCode(name: String, bitmap: Bitmap?)
     }
 
 }

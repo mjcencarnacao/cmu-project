@@ -33,10 +33,15 @@ class AddBookPresenter(private val view: AddBookContract.View) : AddBookContract
         }
     }
 
-    override fun addBookToFirebaseWithoutCode(name: String, bitmap: Bitmap) {
+    override fun addBookToFirebaseWithoutCode(name: String, bitmap: Bitmap?) {
         CoroutineScope(Dispatchers.IO).launch {
             val ref = bookCollection.add(Book(title = name)).await()
-            storage.child("books/" + ref.id).putBytes(convertBitmapToByteArray(view.getBookImage()!!)).await()
+            if (bitmap != null) {
+                val bookImageBytes = convertBitmapToByteArray(bitmap)
+                storage.child("books/${ref.id}").putBytes(bookImageBytes).await()
+            } else {
+                println("No image uploaded")
+            }
         }
     }
 
