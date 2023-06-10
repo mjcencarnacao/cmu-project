@@ -64,9 +64,23 @@ class AddBookFragment : DialogFragment(R.layout.fragment_add_book), AddBookContr
         setOnClickListeners()
     }
 
+    private fun clearFields() {
+        binding.etBookName.text.clear()
+        binding.btnBookImage.setImageDrawable(null)
+        bookImage = null
+    }
+
+    private fun closeFragment() {
+        dismiss()
+    }
+
     private fun setOnClickListeners() {
-        binding.btnAction.setOnClickListener { presenter.addBookToFirebaseWithoutCode(binding.etBookName.text.toString(), bookImage) }
-        
+        binding.btnAction.setOnClickListener { 
+            presenter.addBookToFirebaseWithoutCode(binding.etBookName.text.toString(), bookImage)
+            clearFields()
+            closeFragment()
+        }
+
         binding.btnBookImage.setOnClickListener { generateCameraIntent() }
     }
 
