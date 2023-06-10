@@ -2,6 +2,7 @@ package com.cmu.project.main.book.add
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import com.cmu.project.core.GoogleBooksAPI
 import com.cmu.project.core.ServiceAPI
 import com.cmu.project.core.Utils
@@ -37,12 +38,32 @@ class AddBookPresenter(private val view: AddBookContract.View) : AddBookContract
         CoroutineScope(Dispatchers.IO).launch {
             val ref = bookCollection.add(Book(title = name)).await()
             if (bitmap != null) {
-                val bookImageBytes = convertBitmapToByteArray(bitmap)
+                val fixedBitmap = fixImageOrientation(bitmap) // Fix image orientation
+                val bookImageBytes = convertBitmapToByteArray(fixedBitmap)
                 storage.child("books/${ref.id}").putBytes(bookImageBytes).await()
             } else {
                 println("No image uploaded")
             }
         }
+    }
+
+    private fun fixImageOrientation(bitmap: Bitmap): Bitmap {
+        val degrees = 90f
+        return rotateImage(bitmap, degrees)
+    }
+
+    private fun rotateImage(bitmap: Bitmap, degrees: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(degrees)
+        return Bitmap.createBitmap(
+            bitmap,
+            0,
+            0,
+            bitmap.width,
+            bitmap.height,
+            matrix,
+            true
+        )
     }
 
     override fun addBookToFirebaseWithCode(id: String) {
