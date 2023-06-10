@@ -71,12 +71,8 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
         view.goToBookDetails(bundle)
     }
 
-    private fun getCoverImageFromRemote(book: Book): Uri? {
-        var image: Uri? = null
-        CoroutineScope(Dispatchers.IO).launch {
-            image = storage.child("books/" + book.id).downloadUrl.await()
-        }
-        return image
+    private suspend fun getCoverImageFromRemote(book: Book): Uri? {
+        return storage.child("books/" + book.id).downloadUrl.await()
     }
 
     fun getBookAtPosition(position: Int): Book {

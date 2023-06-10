@@ -12,7 +12,9 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import com.cmu.project.R
+import com.cmu.project.core.models.Library
 import com.cmu.project.databinding.FragmentAddBookBinding
+import com.google.gson.Gson
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import java.io.File
@@ -70,6 +72,10 @@ class AddBookFragment : DialogFragment(R.layout.fragment_add_book), AddBookContr
 
     override fun getBookImage(): Bitmap? {
         return bookImage
+    }
+
+    override fun getLibraryName(): String {
+        return Gson().fromJson(args.library, Library::class.java).name
     }
 
 }

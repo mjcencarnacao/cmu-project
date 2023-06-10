@@ -28,7 +28,7 @@ class AddBookPresenter(private val view: AddBookContract.View) : AddBookContract
 
     override fun addBookToLibrary(documentReference: DocumentReference) {
         CoroutineScope(Dispatchers.IO).launch {
-            val snapshot = libraryCollection.get().await().find { it.getString("name") == "view.getLibraryName()" }
+            val snapshot = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
             snapshot?.reference?.update("books", FieldValue.arrayUnion(documentReference))?.await()
         }
     }
