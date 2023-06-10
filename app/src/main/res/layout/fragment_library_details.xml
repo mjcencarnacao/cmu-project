@@ -54,38 +54,38 @@
         <ImageButton
             android:id="@+id/btnLibraryFavourite"
             style="@style/ImageButton"
-            android:layout_marginStart="@dimen/medium_margin"
-            android:layout_marginEnd="30dp"
+            android:layout_marginEnd="28dp"
             android:background="@drawable/circle"
             android:contentDescription="@string/todo"
             android:src="@drawable/ic_favorite"
-            app:layout_constraintBottom_toBottomOf="@id/tvLibraryRating"
+            app:layout_constraintBottom_toTopOf="@+id/tvDescription"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvLibraryName" />
-
-        <ImageButton
-            android:id="@+id/btnRemoveBook"
-            style="@style/ImageButton"
-            android:layout_marginStart="@dimen/medium_margin"
-            android:layout_marginEnd="60dp"
-            android:background="@drawable/circle"
-            android:contentDescription="@string/todo"
-            android:src="@drawable/ic_remove"
-            app:layout_constraintBottom_toBottomOf="@id/tvLibraryRating"
-            app:layout_constraintEnd_toEndOf="@+id/btnLibraryFavourite"
-            app:layout_constraintTop_toTopOf="@id/tvLibraryName" />
+            app:layout_constraintTop_toTopOf="@id/tvLibraryName"
+            app:layout_constraintVertical_bias="0.673" />
 
         <ImageButton
             android:id="@+id/btnAddBook"
             style="@style/ImageButton"
-            android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginEnd="60dp"
             android:background="@drawable/circle"
             android:contentDescription="@string/todo"
             android:src="@drawable/ic_add"
-            app:layout_constraintBottom_toBottomOf="@id/tvLibraryRating"
+            app:layout_constraintBottom_toTopOf="@+id/tvDescription"
             app:layout_constraintEnd_toEndOf="@+id/btnRemoveBook"
-            app:layout_constraintTop_toTopOf="@id/tvLibraryName" />
+            app:layout_constraintTop_toTopOf="@id/tvLibraryName"
+            app:layout_constraintVertical_bias="0.673" />
+
+        <ImageButton
+            android:id="@+id/btnRemoveBook"
+            style="@style/ImageButton"
+            android:layout_marginEnd="60dp"
+            android:background="@drawable/circle"
+            android:contentDescription="@string/todo"
+            android:src="@drawable/ic_remove"
+            app:layout_constraintBottom_toTopOf="@+id/tvDescription"
+            app:layout_constraintEnd_toEndOf="@+id/btnLibraryFavourite"
+            app:layout_constraintTop_toTopOf="@id/tvLibraryName"
+            app:layout_constraintVertical_bias="0.673" />
 
         <TextView
             android:id="@+id/tvDescription"
