@@ -28,12 +28,7 @@ class BookSearchPresenter {
     }
 
     private suspend fun getCoverImageFromRemote(book: Book): Uri? {
-        try {
-            return storage.child("books/" + book.id + ".jpg").downloadUrl.await()
-        } catch (e : Exception){
-
-        }
-        return null
+        return storage.child("books/" + book.id).downloadUrl.await()
     }
 
     fun getFilteredBookList(query: String) {

@@ -43,8 +43,8 @@ class AddLibraryFragment : BottomSheetDialogFragment(com.cmu.project.R.layout.fr
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 1 &&  resultCode == Activity.RESULT_OK){
-            val bitmap = BitmapFactory.decodeFile(currentPhotoPath)
-            Glide.with(requireContext()).load(bitmap).transform(CenterCrop(), RoundedCorners(25)).into(binding.imageView2)
+            libraryImage = BitmapFactory.decodeFile(currentPhotoPath)
+            Glide.with(requireContext()).load(libraryImage).transform(CenterCrop(), RoundedCorners(25)).into(binding.imageView2)
             binding.imageView2.visibility = View.VISIBLE
         }
     }
