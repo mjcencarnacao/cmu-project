@@ -11,6 +11,6 @@ data class Book(
     var rating: Float = 0.0F
 )
 
-fun Book.toBookEntity() : BookEntity {
+fun Book.toBookEntity(): BookEntity {
     return BookEntity(id = id, title = title, code = code, author = author, rating = rating)
 }

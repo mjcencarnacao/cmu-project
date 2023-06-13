@@ -12,6 +12,12 @@ data class Library(
     var rating: Float = 0.0F,
 )
 
-fun Library.toLibraryEntity() : LibraryEntity {
-    return LibraryEntity(id = id, name = name, location = Gson().toJson(location), rating = rating, EMPTY_STRING)
+fun Library.toLibraryEntity(): LibraryEntity {
+    return LibraryEntity(
+        id = id,
+        name = name,
+        location = Gson().toJson(location),
+        rating = rating,
+        EMPTY_STRING
+    )
 }

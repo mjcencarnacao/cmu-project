@@ -2,6 +2,7 @@ package com.cmu.project.authentication.login
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.Manifest.permission.ACCESS_NOTIFICATION_POLICY
 import android.Manifest.permission.CAMERA
 import android.content.Context
 import android.content.Intent
@@ -27,7 +28,7 @@ class LoginFragment : Fragment(R.layout.fragment_login), LoginContract.View {
     object HOLDER {
         const val TAG = "LoginFragment"
         const val PERMISSION_REQUEST_CODE: Int = 1234
-        val permissions = arrayOf(CAMERA, ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
+        val permissions = arrayOf(CAMERA, ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, ACCESS_NOTIFICATION_POLICY)
     }
 
     override lateinit var presenter: LoginPresenter

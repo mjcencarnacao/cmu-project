@@ -16,5 +16,10 @@ data class LibraryEntity(
 )
 
 fun LibraryEntity.toLibrary(): Library {
-    return Library(id = id, name = name, location = Gson().fromJson(location, GeoPoint::class.java), rating = rating)
+    return Library(
+        id = id,
+        name = name,
+        location = Gson().fromJson(location, GeoPoint::class.java),
+        rating = rating
+    )
 }

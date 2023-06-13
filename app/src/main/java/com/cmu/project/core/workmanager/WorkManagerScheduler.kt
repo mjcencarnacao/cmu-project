@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.cmu.project.core.workmanager.WorkManagerScheduler.HOLDER.NOTIFICATIONS
 import com.cmu.project.core.workmanager.WorkManagerScheduler.HOLDER.SYNCHRONIZATION
+import com.cmu.project.core.workmanager.notifications.NotificationWorker
 import com.cmu.project.core.workmanager.synchronization.SynchronizationWorker
 import java.util.concurrent.TimeUnit
 
@@ -17,12 +19,18 @@ class WorkManagerScheduler(private val context: Context) {
     }
 
     init {
+        setPeriodicNotificationWorker()
         setPeriodicSynchronizationWorker()
     }
 
     private fun setPeriodicSynchronizationWorker() {
-        val work = PeriodicWorkRequestBuilder<SynchronizationWorker>(5, TimeUnit.MINUTES).build()
+        val work = PeriodicWorkRequestBuilder<SynchronizationWorker>(5, TimeUnit.SECONDS).build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(SYNCHRONIZATION, ExistingPeriodicWorkPolicy.UPDATE, work)
+    }
+
+    private fun setPeriodicNotificationWorker() {
+        val work = PeriodicWorkRequestBuilder<NotificationWorker>(5, TimeUnit.SECONDS).build()
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(NOTIFICATIONS, ExistingPeriodicWorkPolicy.UPDATE, work)
     }
 
 }
