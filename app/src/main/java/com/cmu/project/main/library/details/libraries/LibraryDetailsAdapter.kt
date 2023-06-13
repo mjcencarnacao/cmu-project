@@ -16,7 +16,7 @@ class LibraryDetailsAdapter(private val presenter: LibraryDetailsPresenter) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryDetailsViewHolder {
         return LibraryDetailsViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_book, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
         )
     }
 

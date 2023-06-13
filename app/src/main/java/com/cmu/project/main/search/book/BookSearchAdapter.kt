@@ -4,12 +4,10 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.cmu.project.R
 import com.cmu.project.core.models.Book
-import com.cmu.project.main.search.BookSearchFragmentDirections
 import com.cmu.project.main.search.BookSearchPresenter
 import com.google.gson.Gson
 
@@ -19,7 +17,7 @@ class BookSearchAdapter(private val presenter: BookSearchPresenter) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookSearchViewHolder {
         return BookSearchViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_book, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
         )
     }
 

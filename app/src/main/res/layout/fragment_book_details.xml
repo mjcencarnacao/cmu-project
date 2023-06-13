@@ -13,7 +13,7 @@
 
         <include
             android:id="@+id/book_detail"
-            layout="@layout/item_book" />
+            layout="@layout/list_item" />
 
         <TextView
             android:id="@+id/textView"

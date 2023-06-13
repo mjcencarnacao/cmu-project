@@ -172,7 +172,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvBooksTitle"
-            tools:listitem="@layout/item_book" />
+            tools:listitem="@layout/list_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

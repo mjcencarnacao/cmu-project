@@ -5,28 +5,28 @@ import android.net.Uri
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.cmu.project.databinding.ItemLibraryBinding
+import com.cmu.project.databinding.ListItemBinding
 import com.cmu.project.main.book.details.BookDetailsContract
 
 class BookDetailsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), BookDetailsContract.LibraryView {
 
-    private var binding: ItemLibraryBinding = ItemLibraryBinding.bind(itemView)
+    private var binding: ListItemBinding = ListItemBinding.bind(itemView)
 
     override fun setLibraryName(name: String) {
-        binding.itemLibraryName.text = name
+        binding.itemBookTitle.text = name
     }
 
     @SuppressLint("SetTextI18n")
     override fun setLibraryLocation(location: String) {
-        binding.itemLibraryLocation.text = location
+        binding.itemBookAuthor.text = location
     }
 
     override fun setLibraryRating(rating: Float) {
-        binding.itemLibraryRatingbar.rating = rating
+        binding.itemBookRatingbar.rating = rating
     }
 
     override fun setLibraryImage(url: Uri?) {
-        Glide.with(itemView.context).load(url).into(binding.itemLibraryImg)
+        Glide.with(itemView.context).load(url).into(binding.itemBookImg)
     }
 
 }

@@ -5,12 +5,12 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.cmu.project.databinding.ItemBookBinding
+import com.cmu.project.databinding.ListItemBinding
 import com.cmu.project.main.search.BookSearchContract
 
 class BookSearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), BookSearchContract.BookView {
 
-    private var binding: ItemBookBinding = ItemBookBinding.bind(itemView)
+    private var binding: ListItemBinding = ListItemBinding.bind(itemView)
 
     override fun setBookTitle(title: String) {
         binding.itemBookTitle.text = title

@@ -23,5 +23,5 @@
     <string name="communication">Comunicación</string>
     <string name="books_available">Libros disponibles</string>
     <string name="library_dialog_description">Para agregar o eliminar un libro de la biblioteca, simplemente usa los botones de arriba. Las bibliotecas se pueden agregar a los favoritos del usuario. A continuación se muestra una lista de los libros disponibles.</string>
-
+    <string name="score">puntaje</string>
 </resources>
