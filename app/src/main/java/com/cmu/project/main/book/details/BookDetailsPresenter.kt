@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.location.Geocoder
 import android.location.Location
+import android.util.Log
 import com.cmu.project.core.models.Book
 import com.cmu.project.core.models.Library
 import com.cmu.project.main.book.details.libraries.BookDetailsViewHolder
@@ -22,7 +23,7 @@ import java.util.SortedMap
 
 class BookDetailsPresenter(activity: Activity) {
 
-    private var libraryList = mutableListOf<Library>()
+    var libraryList = mutableListOf<Library>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var myLocation: Location
     private val libraryCollection = Firebase.firestore.collection("libraries")
@@ -101,6 +102,7 @@ class BookDetailsPresenter(activity: Activity) {
                 }
             }
         }
+        Log.i("LIBRARIES", "${collection.size} | $collection")
         return collection.toSortedMap()
     }
 

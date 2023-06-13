@@ -1,10 +1,15 @@
 package com.cmu.project.main.maps
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Bitmap.createScaledBitmap
 import android.graphics.BitmapFactory.decodeResource
 import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -14,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.cmu.project.R
+import com.cmu.project.core.models.Library
 import com.cmu.project.databinding.FragmentMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -22,6 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory.fromBitmap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions.loadRawResourceStyle
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -30,11 +37,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
 class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
     NavigationView.OnNavigationItemSelectedListener {
 
     override lateinit var presenter: MapsPresenter
     private lateinit var binding: FragmentMapsBinding
+    private val renderedLibraries: MutableMap<Library, Marker> = HashMap()
+    private var lastMarkerOpened: Marker? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -93,6 +103,40 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
             true
         }
 
+        googleMap.setOnMyLocationChangeListener {
+            val nearbyLibs = HashMap<Float, Pair<Library, Marker>>()
+
+            for ( (lib, marker) in renderedLibraries) {
+                val libLoc = Location("")
+                libLoc.longitude = lib.location.longitude
+                libLoc.latitude = lib.location.latitude
+
+                val distance = it.distanceTo(libLoc)
+                if (distance <= 100)
+                    nearbyLibs[distance] = Pair(lib, marker)
+            }
+
+            if (nearbyLibs.isEmpty())
+                return@setOnMyLocationChangeListener
+
+            val nearestLib = nearbyLibs.toSortedMap().entries.first().value
+            if (lastMarkerOpened != nearestLib.second) {
+                nearestLib.second.tag.let {
+                    val library = nearestLib.first
+                    val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(
+                        library = Gson().toJson(library),
+                        coordinates = null
+                    )
+                    findNavController().navigate(action)
+                }
+                lastMarkerOpened = nearestLib.second
+            }
+            else {
+                Log.i("Location", "Already opened and closed!")
+            }
+
+        }
+
         binding.navView.setNavigationItemSelectedListener(this)
 
         binding.btnMenu.setOnClickListener { binding.drawerLayout.openDrawer(Gravity.LEFT) }
@@ -123,6 +167,8 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
                         ), 80, 80, false
                     )
                     marker?.setIcon(fromBitmap(icon))
+                    if (marker != null)
+                        renderedLibraries[library] = marker
                 }
             }
         }

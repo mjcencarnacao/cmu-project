@@ -1,6 +1,7 @@
 package com.cmu.project.main.book.details
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -53,7 +54,7 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
         binding.bookDetail.itemBookTitle.text = book.title
 
         lifecycleScope.launch {
-            val url = storage.child("books/" + book.id + ".jpg").downloadUrl.await()
+            val url = storage.child("books/" + book.id).downloadUrl.await()
             Glide.with(this@BookDetailsFragment)
                 .load(url)
                 .into(binding.bookDetail.itemBookImg)

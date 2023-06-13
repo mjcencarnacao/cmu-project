@@ -28,15 +28,24 @@ class BookSearchPresenter {
     }
 
     private suspend fun getCoverImageFromRemote(book: Book): Uri? {
-        return storage.child("books/" + book.id).downloadUrl.await()
+        try {
+            return storage.child("books/" + book.id).downloadUrl.await()
+        }
+        catch (e: Exception) {
+            return null
+        }
     }
 
     fun getFilteredBookList(query: String) {
         val filtered = mutableListOf<Book>()
-        fullBookList.forEach {
-                book -> if (book.title.lowercase().contains(query.lowercase())) filtered.add(book)
+        fullBookList.forEach { book ->
+            if (book.title.lowercase().contains(query.lowercase())) filtered.add(book)
         }
         this.bookList = filtered
+    }
+
+    fun getAlreadyFetchedBooks(): MutableList<Book> {
+        return bookList
     }
 
     fun updateList(list: MutableList<Book>) {
