@@ -14,10 +14,10 @@
         app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
         app:layout_constraintStart_toStartOf="@+id/constraintLayout"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_item" />
+        app:srcCompat="@drawable/ic_camera" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@drawable/rounded_corner"
+        android:background="@drawable/sh_rounded_corner"
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
             style="@style/ImageButton"
             android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginEnd="30dp"
-            android:background="@drawable/circle"
+            android:background="@drawable/ic_circle_filled"
             android:contentDescription="@string/todo"
             android:src="@drawable/ic_favorite"
             app:layout_constraintBottom_toBottomOf="@id/tvLibraryRating"
@@ -80,7 +80,7 @@
             style="@style/ImageButton"
             android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginEnd="60dp"
-            android:background="@drawable/circle"
+            android:background="@drawable/ic_circle_filled"
             android:contentDescription="@string/todo"
             android:src="@drawable/ic_remove"
             app:layout_constraintBottom_toBottomOf="@id/tvLibraryRating"
@@ -92,7 +92,7 @@
             style="@style/ImageButton"
             android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginEnd="60dp"
-            android:background="@drawable/circle"
+            android:background="@drawable/ic_circle_filled"
             android:contentDescription="@string/todo"
             android:src="@drawable/ic_add"
             app:layout_constraintBottom_toBottomOf="@id/tvLibraryRating"

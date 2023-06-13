@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_login"
+    android:background="@drawable/bg_login"
     tools:context=".authentication.login.LoginFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,7 +44,7 @@
             android:id="@+id/btnSignIn"
             style="@style/ButtonView"
             android:layout_marginTop="@dimen/large_margin"
-            android:background="@drawable/arrow_right"
+            android:background="@drawable/ic_arrow_right"
             android:contentDescription="@string/todo"
             app:layout_constraintEnd_toEndOf="@+id/etPassword"
             app:layout_constraintStart_toStartOf="@+id/etPassword"

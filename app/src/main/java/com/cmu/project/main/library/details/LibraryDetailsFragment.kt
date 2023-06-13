@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.provider.MediaStore.EXTRA_OUTPUT
 import android.view.View
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
@@ -20,7 +19,6 @@ import com.cmu.project.R
 import com.cmu.project.core.models.Library
 import com.cmu.project.databinding.FragmentLibraryDetailsBinding
 import com.cmu.project.main.library.details.libraries.LibraryDetailsAdapter
-import com.cmu.project.main.maps.MapsFragmentDirections
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
@@ -28,7 +26,6 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -139,7 +136,7 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
 
     override fun changeFavouriteButton(isFav: Boolean) {
         if (isFav)
-            binding.btnLibraryFavourite.setImageResource(R.drawable.ic_favorite_red)
+            binding.btnLibraryFavourite.setImageResource(R.drawable.ic_favorite_filled)
         else
             binding.btnLibraryFavourite.setImageResource(R.drawable.ic_favorite)
     }

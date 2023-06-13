@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_register"
+    android:background="@drawable/bg_register"
     tools:context=".authentication.register.RegisterFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,7 +64,7 @@
         <ImageButton
             android:id="@+id/btnSignIn"
             style="@style/ButtonView"
-            android:background="@drawable/arrow_right"
+            android:background="@drawable/ic_arrow_right"
             android:contentDescription="@string/todo"
             app:layout_constraintEnd_toEndOf="@+id/etConfirmPassword"
             app:layout_constraintStart_toStartOf="@+id/etConfirmPassword"

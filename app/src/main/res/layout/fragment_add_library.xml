@@ -13,14 +13,14 @@
         app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
         app:layout_constraintStart_toStartOf="@+id/constraintLayout"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_item" />
+        app:srcCompat="@drawable/ic_camera" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@drawable/rounded_corner"
+        android:background="@drawable/sh_rounded_corner"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -51,9 +51,9 @@
         <ImageButton
             android:id="@+id/btnLibraryFavourite"
             style="@style/ImageButton"
-            android:background="@drawable/circle"
+            android:background="@drawable/ic_circle_filled"
             android:contentDescription="@string/todo"
-            android:src="@drawable/ic_image"
+            android:src="@drawable/ic_camera"
             app:layout_constraintBottom_toBottomOf="@id/tvLibraryName"
             app:layout_constraintEnd_toEndOf="@id/tvDescription"
             app:layout_constraintTop_toTopOf="@id/tvLibraryName" />
@@ -78,9 +78,9 @@
             android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginTop="@dimen/medium_margin"
             android:layout_marginBottom="35dp"
-            android:background="@drawable/circle2"
+            android:background="@drawable/ic_circle_outlined"
             android:contentDescription="@string/todo"
-            android:src="@drawable/ic_back"
+            android:src="@drawable/ic_arrow_left"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
