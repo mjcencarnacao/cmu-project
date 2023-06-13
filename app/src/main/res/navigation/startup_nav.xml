@@ -18,5 +18,9 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.cmu.project.authentication.register.RegisterFragment"
-        android:label="RegisterFragment" />
+        android:label="RegisterFragment" >
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>

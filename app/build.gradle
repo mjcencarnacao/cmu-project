@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android'
     id 'com.google.gms.google-services'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
     id 'androidx.navigation.safeargs.kotlin'
@@ -98,23 +97,17 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.15.1'
 
     /**
-     * Dagger Hilt
-     * https://developer.android.com/training/dependency-injection/hilt-android
-     */
-    implementation "com.google.dagger:hilt-android:2.44"
-    kapt "com.google.dagger:hilt-compiler:2.44"
-
-    /**
      * Machine Learning Vision Model
      * https://developers.google.com/ml-kit/vision/barcode-scanning/android
      */
     implementation 'com.google.mlkit:barcode-scanning:17.1.0'
 
     /**
-     * Google Books API
-     * https://developers.google.com/books
+     * Room Database
+     * https://developer.android.com/training/data-storage/room
      */
-    implementation 'com.google.api-client:google-api-client-android:1.31.5'
+    implementation "androidx.room:room-ktx:2.5.1"
+    kapt "androidx.room:room-compiler:2.5.1"
 
 }
 

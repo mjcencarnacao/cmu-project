@@ -1,6 +1,8 @@
 package com.cmu.project.main.maps
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap.createScaledBitmap
 import android.graphics.BitmapFactory.decodeResource
 import android.location.Geocoder
@@ -14,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.cmu.project.R
+import com.cmu.project.core.activities.StartupActivity
 import com.cmu.project.databinding.FragmentMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -52,6 +55,10 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
         googleMap.setMapStyle(context?.let { loadRawResourceStyle(it, R.raw.style) })
         setupListeners(googleMap)
         setupLibraryMarkers(googleMap)
+    }
+
+    override fun provideContext(): Context {
+        return requireContext()
     }
 
     @Suppress("DEPRECATION")
@@ -102,10 +109,29 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.navSearch -> findNavController().navigate(R.id.action_mapsFragment_to_bookSearchFragment)
-            // R.id.navLogout ->
+            R.id.navLogout -> signOut()
+            R.id.navRate -> shareToSocialMedia()
+
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true
+    }
+
+    private fun signOut() {
+        FirebaseAuth.getInstance().signOut()
+        startStartupActivity()
+    }
+
+    private fun shareToSocialMedia() {
+        val intent = Intent();
+        intent.action = Intent.ACTION_SEND;
+        intent.putExtra(Intent.EXTRA_TEXT, "Share and manage libraries effortlessly with LibrarIST.");
+        intent.type = "text/plain";
+        startActivity(Intent.createChooser(intent, "Share"));
+    }
+
+    override fun startStartupActivity() {
+        startActivity(Intent(context, StartupActivity::class.java)).also { activity?.finish() }
     }
 
     override fun setupLibraryMarkers(googleMap: GoogleMap) {
