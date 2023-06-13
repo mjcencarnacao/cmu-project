@@ -66,7 +66,6 @@
         app:layout_constraintTop_toBottomOf="@+id/item_book_author" />
 
     <TextView
-        android:id="@+id/item_book_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -77,7 +76,6 @@
         app:layout_constraintTop_toTopOf="@+id/item_book_ratingbar" />
 
     <ImageView
-        android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -40,7 +39,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
@@ -59,7 +57,6 @@
             tools:ignore="FragmentTagUsage" />
 
         <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"

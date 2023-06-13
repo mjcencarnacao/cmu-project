@@ -1,9 +1,5 @@
 <resources>
 
-    <style name="Base.Theme.LibrarIST" parent="Theme.Material3.DayNight.NoActionBar" />
-
-    <style name="Theme.LibrarIST" parent="Base.Theme.LibrarIST" />
-
     <style name="splashScreenTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/yellow_icon</item>
         <item name="android:windowBackground">@color/yellow_icon</item>

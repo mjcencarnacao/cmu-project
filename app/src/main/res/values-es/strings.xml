@@ -11,19 +11,13 @@
     <string name="confirm_password">Confirmar contraseña</string>
     <string name="name">Nombre</string>
     <string name="lets_get_started">Comencemos\nahora</string>
-    <string name="loading">Cargando...</string>
-    <string name="location">Ubicación</string>
     <string name="add_library">Agregar biblioteca</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hola fragmento en blanco</string>
     <string name="library_name">Nombre de la biblioteca</string>
-    <string name="more_details">Más detalles</string>
-    <string name="add_library_description">La siguiente ubicación se utilizará para agregar una nueva biblioteca al sistema. Para continuar, presiona enviar después de completar los detalles.</string>
     <string name="library_title">Título de la biblioteca</string>
     <string name="search_books">Buscar libros</string>
     <string name="share">Compartir</string>
-    <string name="report_a_bug">Informar de un error</string>
     <string name="logout">Cerrar sesión</string>
     <string name="account">Cuenta</string>
     <string name="communication">Comunicación</string>
