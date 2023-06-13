@@ -15,8 +15,10 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.cmu.project.R
 import com.cmu.project.core.activities.StartupActivity
+import com.cmu.project.core.workmanager.WorkManagerScheduler
 import com.cmu.project.databinding.FragmentMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -45,8 +47,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
         mapFragment?.getMapAsync(callback)
         presenter = MapsPresenter(this)
         binding = FragmentMapsBinding.bind(view)
-        FirebaseAuth.getInstance()
-            .signInWithEmailAndPassword("miguel.encarnacao@tecnico.ulisboa.pt", "12345678")
+        WorkManagerScheduler(requireContext())
     }
 
     @SuppressLint("MissingPermission")
@@ -104,6 +105,11 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
 
         binding.btnMenu.setOnClickListener { binding.drawerLayout.openDrawer(Gravity.LEFT) }
 
+        binding.swiperefresh.setOnRefreshListener{
+            setupLibraryMarkers(googleMap, true)
+            binding.swiperefresh.isRefreshing = false;
+        }
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -134,13 +140,12 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
         startActivity(Intent(context, StartupActivity::class.java)).also { activity?.finish() }
     }
 
-    override fun setupLibraryMarkers(googleMap: GoogleMap) {
+    override fun setupLibraryMarkers(googleMap: GoogleMap, refresh: Boolean) {
         lifecycleScope.launch(Dispatchers.IO) {
-            presenter.retrieveLibrariesFromCloud().forEach { library ->
+            presenter.retrieveLibrariesFromCloud(refresh).forEach { library ->
                 val position = LatLng(library.location.latitude, library.location.longitude)
                 withContext(Dispatchers.Main) {
-                    val marker =
-                        googleMap.addMarker(MarkerOptions().position(position).title(library.name))
+                    val marker = googleMap.addMarker(MarkerOptions().position(position).title(library.name))
                     marker?.tag = library
                     val icon = createScaledBitmap(
                         decodeResource(

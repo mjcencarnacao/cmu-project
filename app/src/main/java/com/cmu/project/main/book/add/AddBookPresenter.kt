@@ -37,6 +37,8 @@ class AddBookPresenter(private val view: AddBookContract.View) : AddBookContract
         CoroutineScope(Dispatchers.IO).launch {
             val ref = bookCollection.add(Book(title = name)).await()
             storage.child("books/" + ref.id).putBytes(convertBitmapToByteArray(view.getBookImage()!!)).await()
+            addBookToLibrary(ref)
+            view.dismissDialog()
         }
     }
 

@@ -13,8 +13,8 @@ class MapsPresenter(view: MapsContract.View) : MapsContract.Presenter {
     private val database = CacheDatabase.getInstance(view.provideContext())
     private val libraryCollection = Firebase.firestore.collection("libraries")
 
-    override suspend fun retrieveLibrariesFromCloud(): List<Library> {
-        if (database.libraryDao().isEmpty())
+    override suspend fun retrieveLibrariesFromCloud(refresh: Boolean): List<Library> {
+        if (database.libraryDao().isEmpty() || refresh)
             return libraryListFromSnapshot(libraryCollection.get().await(), database)
         return libraryEntityToLibraryList(database.libraryDao().getAll())
     }

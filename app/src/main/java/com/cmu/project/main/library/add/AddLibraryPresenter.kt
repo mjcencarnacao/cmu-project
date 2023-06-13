@@ -19,6 +19,7 @@ class AddLibraryPresenter(private val view: AddLibraryContract.View) : AddLibrar
     override fun addLibraryToRemoteCollection(name: String, geoPoint: GeoPoint) {
         CoroutineScope(Dispatchers.IO).launch {
             val ref = libraryCollection.add(Library(name = name, location = geoPoint)).await()
+            ref.update("id", ref.id).await()
             storage.child("libraries/" + ref.id).putBytes(convertBitmapToByteArray(view.getLibraryImage()!!)).await()
         }
     }

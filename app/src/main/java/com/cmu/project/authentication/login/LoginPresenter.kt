@@ -16,13 +16,10 @@ class LoginPresenter(private val view: LoginContract.View) : LoginContract.Prese
     }
 
     override suspend fun signInWithEmailAndPassword(email: String, password: String) {
-        if (isUserAuthenticated())
-            view.startMainActivity()
-        else {
-            val ref = FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
-            database.userDao().insert(UserEntity(id = ref.user!!.uid, "", email, md5(password), EMPTY_STRING, EMPTY_STRING))
-            view.startMainActivity()
-        }
+        val ref = FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
+        database.userDao().delete()
+        database.userDao().insert(UserEntity(id = ref.user!!.uid, "", email, md5(password), EMPTY_STRING, EMPTY_STRING))
+        view.startMainActivity()
     }
 
 }

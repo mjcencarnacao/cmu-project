@@ -13,6 +13,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.cmu.project.R
 import com.cmu.project.core.models.Library
 import com.cmu.project.databinding.FragmentLibraryDetailsBinding
@@ -23,7 +26,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -51,6 +56,14 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
         setupDialog()
         val library = Gson().fromJson(args.library, Library::class.java)
         setLibraryName(library.name)
+        setLibraryImage()
+        binding.ratingBar.rating = library.rating
+    }
+
+    private fun setRating(float: Float) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            presenter.sendRating(float)
+        }
     }
 
     private fun setupDialog() {
@@ -85,7 +98,6 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
         val action = LibraryDetailsFragmentDirections.actionLibraryDetailsFragmentToAddBookFragment(library = args.library, coordinates = args.coordinates)
 
         findNavController().navigate(action)
-
     }
 
     override fun setLibraryName(name: String) {
@@ -93,6 +105,8 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
     }
 
     private fun setOnClickListeners() {
+        binding.ratingBar.setOnRatingBarChangeListener { _, rating, _ ->  setRating(rating)}
+
         binding.btnRemoveBook.setOnClickListener { generateCameraIntent() }
 
         binding.btnAddBook.setOnClickListener { navigateToAddFragment() }
@@ -104,6 +118,14 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
                     presenter.addLibraryToFavourites(user, Gson().fromJson(args.library, Library::class.java))
                 }
             }
+        }
+    }
+
+    override fun setLibraryImage() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val uri = presenter.getLibraryImage(Gson().fromJson(args.library, Library::class.java))
+            withContext(Dispatchers.Main) {
+                Glide.with(requireContext()).load(uri).transform(CenterCrop(), RoundedCorners(25)).into(binding.imageView2)            }
         }
     }
 

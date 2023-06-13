@@ -74,8 +74,14 @@ class AddBookFragment : DialogFragment(R.layout.fragment_add_book), AddBookContr
         return bookImage
     }
 
+    override fun dismissDialog() {
+        dismiss()
+    }
+
     override fun getLibraryName(): String {
         return Gson().fromJson(args.library, Library::class.java).name
     }
+
+
 
 }

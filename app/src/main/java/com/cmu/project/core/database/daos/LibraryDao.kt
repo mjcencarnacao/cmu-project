@@ -3,6 +3,7 @@ package com.cmu.project.core.database.daos
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.cmu.project.core.database.entities.LibraryEntity
 
@@ -12,7 +13,7 @@ interface LibraryDao {
     @Query("SELECT * FROM library")
     fun getAll(): List<LibraryEntity>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(libraryEntity: LibraryEntity)
 
     @Delete

@@ -12,11 +12,11 @@ interface MapsContract {
         fun startStartupActivity()
         fun provideContext(): Context
         fun setupListeners(googleMap: GoogleMap)
-        fun setupLibraryMarkers(googleMap: GoogleMap)
+        fun setupLibraryMarkers(googleMap: GoogleMap, refresh: Boolean = false)
     }
 
     interface Presenter : BasePresenter {
-        suspend fun retrieveLibrariesFromCloud(): List<Library>
+        suspend fun retrieveLibrariesFromCloud(refresh: Boolean = false): List<Library>
     }
 
 }

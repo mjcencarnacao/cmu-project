@@ -26,6 +26,16 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
     private val libraryCollection = Firebase.firestore.collection("libraries")
     private var bookList = mutableListOf<Book>()
 
+    override suspend fun sendRating(float: Float) {
+        val snapshot = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
+        val rating = snapshot?.reference?.get()?.await()?.toObject(Library::class.java)?.rating
+        if (rating != null) { snapshot.reference.update("rating", (rating + float / 2)).await() }
+    }
+
+    override suspend fun getLibraryImage(library: Library) : Uri?{
+        return storage.child("libraries/" + library.id.trim()).downloadUrl.await()
+    }
+
     override fun removeBookFromLibrary(id: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val snapshot = libraryCollection.get().await()

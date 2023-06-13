@@ -2,6 +2,7 @@ package com.cmu.project.core.database.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.cmu.project.core.database.entities.UserEntity
 
@@ -11,7 +12,7 @@ interface UserDao {
     @Query("SELECT * FROM user LIMIT 1")
     fun getCurrentUser(): UserEntity
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: UserEntity)
 
     @Query("DELETE FROM user")

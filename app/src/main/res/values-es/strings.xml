@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LibrarIST</string>
+    <string name="sign_in">Iniciar sesión</string>
+    <string name="sign_up">Registrarse</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="welcome_back">Bienvenido\nde nuevo</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="todo">POR HACER</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="name">Nombre</string>
+    <string name="lets_get_started">Comencemos\nahora</string>
+    <string name="loading">Cargando...</string>
+    <string name="location">Ubicación</string>
+    <string name="add_library">Agregar biblioteca</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hola fragmento en blanco</string>
+    <string name="library_name">Nombre de la biblioteca</string>
+    <string name="more_details">Más detalles</string>
+    <string name="add_library_description">La siguiente ubicación se utilizará para agregar una nueva biblioteca al sistema. Para continuar, presiona enviar después de completar los detalles.</string>
+    <string name="library_title">Título de la biblioteca</string>
+    <string name="search_books">Buscar libros</string>
+    <string name="share">Compartir</string>
+    <string name="report_a_bug">Informar de un error</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="account">Cuenta</string>
+    <string name="communication">Comunicación</string>
+    <string name="books_available">Libros disponibles</string>
+    <string name="library_dialog_description">Para agregar o eliminar un libro de la biblioteca, simplemente usa los botones de arriba. Las bibliotecas se pueden agregar a los favoritos del usuario. A continuación se muestra una lista de los libros disponibles.</string>
+
+</resources>
