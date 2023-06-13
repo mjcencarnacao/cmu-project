@@ -1,6 +1,7 @@
 package com.cmu.project.main.book.details
 
 import android.net.Uri
+import com.cmu.project.core.models.Library
 import com.cmu.project.core.mvp.BasePresenter
 import com.google.firebase.firestore.GeoPoint
 
@@ -15,6 +16,6 @@ interface BookDetailsContract {
     }
 
     interface Presenter : BasePresenter {
-
+        suspend fun getLibraryImageFromRemote(library: Library): Uri?
     }
 }

@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface GoogleBooksAPI {
     @GET("volumes")
-    suspend fun getBookDetails(@Query("q") id: String) : Response<GoogleBooksDTO>
+    suspend fun getBookDetails(@Query("q") id: String): Response<GoogleBooksDTO>
 }

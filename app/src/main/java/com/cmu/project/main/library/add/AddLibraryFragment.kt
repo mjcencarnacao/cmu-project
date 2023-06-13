@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -43,9 +44,8 @@ class AddLibraryFragment : BottomSheetDialogFragment(com.cmu.project.R.layout.fr
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 1 &&  resultCode == Activity.RESULT_OK){
-            libraryImage = BitmapFactory.decodeFile(currentPhotoPath)
+            libraryImage = fixImageOrientation(BitmapFactory.decodeFile(currentPhotoPath))
             Glide.with(requireContext()).load(libraryImage).transform(CenterCrop(), RoundedCorners(25)).into(binding.imageView2)
-            binding.imageView2.visibility = View.VISIBLE
         }
     }
 
@@ -59,8 +59,9 @@ class AddLibraryFragment : BottomSheetDialogFragment(com.cmu.project.R.layout.fr
         startActivityForResult(intent, 1)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return BottomSheetDialog(requireContext(), R.style.MyTransparentBottomSheetDialogTheme)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -98,6 +99,17 @@ class AddLibraryFragment : BottomSheetDialogFragment(com.cmu.project.R.layout.fr
             Toast.makeText(context, "Some Library information is Missing!", Toast.LENGTH_LONG).show()
 
         dismiss()
+    }
+
+    private fun fixImageOrientation(bitmap: Bitmap): Bitmap {
+        val degrees = 90f
+        return rotateImage(bitmap, degrees)
+    }
+
+    private fun rotateImage(bitmap: Bitmap, degrees: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(degrees)
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
 }

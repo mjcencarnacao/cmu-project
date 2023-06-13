@@ -36,6 +36,7 @@ class AddBookPresenter(private val view: AddBookContract.View) : AddBookContract
     override fun addBookToFirebaseWithoutCode(name: String, bitmap: Bitmap) {
         CoroutineScope(Dispatchers.IO).launch {
             val ref = bookCollection.add(Book(title = name)).await()
+            ref.update("id", ref.id)
             storage.child("books/" + ref.id).putBytes(convertBitmapToByteArray(view.getBookImage()!!)).await()
             addBookToLibrary(ref)
             view.dismissDialog()

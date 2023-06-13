@@ -2,7 +2,9 @@ package com.cmu.project.main.library.details
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -55,6 +57,11 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
         setLibraryName(library.name)
         setLibraryImage()
         binding.ratingBar.rating = library.rating
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
     }
 
     private fun setRating(float: Float) {

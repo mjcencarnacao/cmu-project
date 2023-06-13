@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.location.Geocoder
 import android.location.Location
+import android.net.Uri
 import com.cmu.project.core.models.Book
 import com.cmu.project.core.models.Library
 import com.cmu.project.main.book.details.libraries.BookDetailsViewHolder
@@ -14,18 +15,21 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.SortedMap
 
-class BookDetailsPresenter(activity: Activity) {
+class BookDetailsPresenter(activity: Activity) : BookDetailsContract.Presenter {
 
     private var libraryList = mutableListOf<Library>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var myLocation: Location
     private val libraryCollection = Firebase.firestore.collection("libraries")
+    private var storage = FirebaseStorage.getInstance().reference
+
 
     init {
         setLastLocation(activity)
@@ -50,10 +54,9 @@ class BookDetailsPresenter(activity: Activity) {
         holder.setLibraryRating(item.rating)
 
         CoroutineScope(Dispatchers.Main).launch {
-            /* Set Library Image
-            holder.setLibraryImage(getCoverImageFromRemote(item))
-            */
+
             holder.setLibraryLocation(getLibraryReadableLocation(holder.itemView.context, item.location))
+             holder.setLibraryImage(getLibraryImageFromRemote(item))
         }
     }
 
@@ -80,6 +83,10 @@ class BookDetailsPresenter(activity: Activity) {
 
     fun updateList(list: MutableList<Library>) {
         this.libraryList = list
+    }
+
+    override suspend fun getLibraryImageFromRemote(library: Library): Uri? {
+        return storage.child("libraries/" + library.id).downloadUrl.await()
     }
 
     suspend fun retrieveApplicableLibrariesFromCloud(book: Book): SortedMap<Float, Library> {

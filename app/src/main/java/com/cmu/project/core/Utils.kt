@@ -6,7 +6,6 @@ import com.cmu.project.core.database.entities.LibraryEntity
 import com.cmu.project.core.database.entities.toLibrary
 import com.cmu.project.core.models.Library
 import com.cmu.project.core.models.toLibraryEntity
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import java.io.ByteArrayOutputStream
 import java.math.BigInteger
@@ -25,7 +24,7 @@ object Utils {
         return libraries
     }
 
-    fun libraryListFromSnapshot(snapshot: QuerySnapshot, database: CacheDatabase) : List<Library> {
+    fun libraryListFromSnapshot(snapshot: QuerySnapshot, database: CacheDatabase): List<Library> {
         val libraries = mutableListOf<Library>()
         snapshot.forEach { document ->
             val library = document.toObject(Library::class.java)
@@ -35,7 +34,7 @@ object Utils {
         return libraries
     }
 
-    fun md5(input:String): String {
+    fun md5(input: String): String {
         val md = MessageDigest.getInstance("MD5")
         return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
     }

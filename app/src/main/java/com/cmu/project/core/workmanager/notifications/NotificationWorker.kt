@@ -16,6 +16,7 @@ import com.cmu.project.core.workmanager.notifications.NotificationWorker.HOLDER.
 import com.cmu.project.core.workmanager.notifications.NotificationWorker.HOLDER.NOTIFICATION_CHANNEL_NAME
 import com.cmu.project.core.workmanager.notifications.NotificationWorker.HOLDER.NOTIFICATION_ID
 import com.cmu.project.core.workmanager.notifications.NotificationWorker.HOLDER.TAG
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -46,14 +47,22 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) :
     }
 
     private fun checkForNotifications() = CoroutineScope(Dispatchers.IO).launch {
-        val notifications = Gson().fromJson(database.userDao().getCurrentUser().notifications, Array<DocumentReference>::class.java).asList()
-        getRemoteCollection(applicationContext, Collection.LIBRARIES)?.documents?.forEach { library ->
-            if(library.get("books") != null) {
-                val references = library.get("books") as List<*>
-                references.forEach { book ->
-                    val reference = book as DocumentReference
-                    if (notifications.contains(reference))
-                        deployNotification()
+        if(database.userDao().getCurrentUser() != null) {
+            val notifications = Gson().fromJson(
+                database.userDao().getCurrentUser().notifications,
+                Array<DocumentReference>::class.java
+            ).asList()
+            getRemoteCollection(
+                applicationContext,
+                Collection.LIBRARIES
+            )?.documents?.forEach { library ->
+                if (library.get("books") != null) {
+                    val references = library.get("books") as List<*>
+                    references.forEach { book ->
+                        val reference = book as DocumentReference
+                        if (notifications.contains(reference))
+                            deployNotification()
+                    }
                 }
             }
         }

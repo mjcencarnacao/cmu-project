@@ -4,10 +4,8 @@ import android.content.Context
 import com.cmu.project.core.database.CacheDatabase
 import com.cmu.project.core.models.Book
 import com.cmu.project.core.models.Library
-import com.cmu.project.core.models.User
 import com.cmu.project.core.models.toBookEntity
 import com.cmu.project.core.models.toLibraryEntity
-import com.cmu.project.core.models.toUserEntity
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase

@@ -17,7 +17,7 @@
         style="@style/DialogText"
         android:autofillHints="false"
         android:fontFamily="@font/poppins_regular"
-        android:hint="Book Name"
+        android:hint="@string/book_name"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@id/tvDescription"
         app:layout_constraintStart_toStartOf="parent"

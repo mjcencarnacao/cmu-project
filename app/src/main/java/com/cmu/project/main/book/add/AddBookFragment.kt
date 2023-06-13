@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -34,12 +35,18 @@ class AddBookFragment : DialogFragment(R.layout.fragment_add_book), AddBookContr
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             val scanner = BarcodeScanning.getClient()
-            bookImage = BitmapFactory.decodeFile(currentPhotoPath)
+            bookImage = fixImageOrientation(BitmapFactory.decodeFile(currentPhotoPath))
             val image = InputImage.fromBitmap(bookImage!!, 0)
             scanner.process(image).addOnSuccessListener {
                 it.forEach { code -> presenter.addBookToFirebaseWithCode(code.displayValue!!); dismiss() }
             }
+            binding.btnBookImage.setImageResource(R.drawable.ic_correct)
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
     }
 
     private fun generateCameraIntent() {
@@ -82,6 +89,15 @@ class AddBookFragment : DialogFragment(R.layout.fragment_add_book), AddBookContr
         return Gson().fromJson(args.library, Library::class.java).name
     }
 
+    private fun fixImageOrientation(bitmap: Bitmap): Bitmap {
+        val degrees = 90f
+        return rotateImage(bitmap, degrees)
+    }
 
+    private fun rotateImage(bitmap: Bitmap, degrees: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(degrees)
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    }
 
 }
