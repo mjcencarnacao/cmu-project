@@ -22,7 +22,7 @@ class WorkManagerScheduler(private val context: Context) {
 
     private fun setPeriodicSynchronizationWorker() {
         val work = PeriodicWorkRequestBuilder<SynchronizationWorker>(5, TimeUnit.MINUTES).build()
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(SYNCHRONIZATION, ExistingPeriodicWorkPolicy.REPLACE, work)
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(SYNCHRONIZATION, ExistingPeriodicWorkPolicy.UPDATE, work)
     }
 
 }
