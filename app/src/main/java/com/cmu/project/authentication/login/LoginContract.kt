@@ -8,7 +8,8 @@ interface LoginContract {
 
     interface View : BaseView<LoginPresenter> {
         fun startMainActivity()
-        fun provideContext() : Context
+        fun provideContext(): Context
+        fun checkAndRequestPermissions()
     }
 
     interface Presenter : BasePresenter {
