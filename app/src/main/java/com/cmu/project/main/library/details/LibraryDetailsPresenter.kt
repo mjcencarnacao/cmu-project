@@ -3,6 +3,7 @@ package com.cmu.project.main.library.details
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import com.cmu.project.core.database.CacheDatabase
 import com.cmu.project.core.models.Book
 import com.cmu.project.core.models.Library
 import com.cmu.project.main.library.details.libraries.LibraryDetailsViewHolder
@@ -17,22 +18,27 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
-    LibraryDetailsContract.Presenter {
+class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) : LibraryDetailsContract.Presenter {
 
-
+    private var bookList = mutableListOf<Book>()
     private var storage = FirebaseStorage.getInstance().reference
+
     private val bookCollection = Firebase.firestore.collection("books")
     private val libraryCollection = Firebase.firestore.collection("libraries")
-    private var bookList = mutableListOf<Book>()
 
     override suspend fun sendRating(float: Float) {
         val snapshot = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
         val rating = snapshot?.reference?.get()?.await()?.toObject(Library::class.java)?.rating
-        if (rating != null) { snapshot.reference.update("rating", (rating + float / 2)).await() }
+        if (rating != null) {
+            snapshot.reference.update("rating", ((rating + float) / 2)).await()
+        }
     }
 
-    override suspend fun getLibraryImage(library: Library) : Uri?{
+    override fun getRating(): Float {
+        return 0f
+    }
+
+    override suspend fun getLibraryImage(library: Library): Uri? {
         return storage.child("libraries/" + library.id.trim()).downloadUrl.await()
     }
 
@@ -117,7 +123,7 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
 
         if (toAdd)
             userRef.update("favourites", FieldValue.arrayUnion(libRef))
-         else
+        else
             userRef.update("favourites", FieldValue.arrayRemove(libRef))
 
         view.changeFavouriteButton(toAdd)

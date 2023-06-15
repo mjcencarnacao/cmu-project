@@ -35,26 +35,34 @@ class AddBookPresenter(private val view: AddBookContract.View) : AddBookContract
 
     override fun addBookToFirebaseWithoutCode(name: String, bitmap: Bitmap) {
         CoroutineScope(Dispatchers.IO).launch {
-            val ref = bookCollection.add(Book(title = name)).await()
-            ref.update("id", ref.id)
-            storage.child("books/" + ref.id).putBytes(convertBitmapToByteArray(view.getBookImage()!!)).await()
-            addBookToLibrary(ref)
+            val collectionFiltered = bookCollection.get().await().filter { it.getString("title") == name }
+            if (collectionFiltered.isEmpty()) {
+                val ref = bookCollection.add(Book(title = name)).await()
+                ref.update("id", ref.id)
+                storage.child("books/" + ref.id).putBytes(convertBitmapToByteArray(view.getBookImage()!!)).await()
+                addBookToLibrary(ref)
+            } else
+                addBookToLibrary(collectionFiltered.first().reference)
             view.dismissDialog()
         }
     }
 
     override fun addBookToFirebaseWithCode(id: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            api.getBookDetails(id).body()?.let {
-                val title = it.items[0].volumeInfo.title
-                val author = it.items[0].volumeInfo.authors[0]
-                val book = Book(id, title, id.toLong(), author, 0.0F)
-                val ref = bookCollection.add(book).await()
-                addBookToLibrary(ref)
-                val imageUrl = URL(it.items[0].volumeInfo.imageLinks.thumbnail)
-                val image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream())
-                storage.child("books/" + ref.id).putBytes(Utils.convertBitmapToByteArray(image)).await()
-            }
+            val collectionFiltered = bookCollection.get().await().filter { it.getString("id") == id }
+            if (collectionFiltered.isEmpty()) {
+                api.getBookDetails(id).body()?.let {
+                    val title = it.items[0].volumeInfo.title
+                    val author = it.items[0].volumeInfo.authors[0]
+                    val book = Book(id, title, id.toLong(), author, 0.0F)
+                    val ref = bookCollection.add(book).await()
+                    addBookToLibrary(ref)
+                    val imageUrl = URL(it.items[0].volumeInfo.imageLinks.thumbnail)
+                    val image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream())
+                    storage.child("books/" + ref.id).putBytes(Utils.convertBitmapToByteArray(image)).await()
+                }
+            } else
+                addBookToLibrary(collectionFiltered.first().reference)
         }
     }
 

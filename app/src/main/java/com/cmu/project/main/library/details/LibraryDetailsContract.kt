@@ -1,5 +1,6 @@
 package com.cmu.project.main.library.details
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import com.cmu.project.core.models.Book
@@ -13,6 +14,7 @@ import com.google.firebase.firestore.GeoPoint
 interface LibraryDetailsContract {
 
     interface View : BaseView<LibraryDetailsPresenter> {
+        fun provideContext() : Context
         fun setLibraryImage()
         fun getLibraryName() : String
         fun setLibraryName(name: String)
@@ -21,6 +23,7 @@ interface LibraryDetailsContract {
     }
 
     interface Presenter : BasePresenter {
+        fun getRating() : Float
         suspend fun sendRating(float: Float)
         suspend fun getLibraryImage(library: Library) : Uri?
         fun removeBookFromLibrary(id: String)

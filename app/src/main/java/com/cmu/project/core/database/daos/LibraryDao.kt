@@ -25,4 +25,10 @@ interface LibraryDao {
     @Query("SELECT * FROM library WHERE id LIKE :id LIMIT 1")
     fun findById(id: String): LibraryEntity
 
+    @Query("SELECT * FROM library WHERE name LIKE :name LIMIT 1")
+    fun findByName(name: String): LibraryEntity
+
+    @Query("DELETE FROM library")
+    fun deleteAll()
+
 }

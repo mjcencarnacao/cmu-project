@@ -24,16 +24,6 @@ object Utils {
         return libraries
     }
 
-    fun libraryListFromSnapshot(snapshot: QuerySnapshot, database: CacheDatabase): List<Library> {
-        val libraries = mutableListOf<Library>()
-        snapshot.forEach { document ->
-            val library = document.toObject(Library::class.java)
-            libraries.add(library)
-            database.libraryDao().insert(library.toLibraryEntity())
-        }
-        return libraries
-    }
-
     fun md5(input: String): String {
         val md = MessageDigest.getInstance("MD5")
         return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')

@@ -196,6 +196,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
 
     @SuppressLint("MissingPermission")
     override fun setupLibraryMarkers(googleMap: GoogleMap, refresh: Boolean) {
+        googleMap.clear()
         lifecycleScope.launch(Dispatchers.IO) {
             presenter.retrieveLibrariesFromCloud(refresh).forEach { library ->
                 val position = LatLng(library.location.latitude, library.location.longitude)

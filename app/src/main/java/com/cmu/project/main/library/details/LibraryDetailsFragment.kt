@@ -139,6 +139,10 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
         binding.tvLibraryName.text = name
     }
 
+    override fun provideContext(): Context {
+        return requireContext()
+    }
+
     @SuppressLint("SetTextI18n")
     fun setLocationInfo(point: GeoPoint) {
         val geocoder = Geocoder(requireContext())
@@ -153,22 +157,6 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
     private val callback = OnMapReadyCallback { googleMap ->
         googleMap.isMyLocationEnabled = false
         googleMap.setMapStyle(context?.let { MapStyleOptions.loadRawResourceStyle(it, R.raw.style) })
-
-        /*
-        val point = library.location
-
-        val circleOptions = CircleOptions()
-            .center(LatLng(point.latitude, point.longitude))
-            .radius(20.0)
-            .strokeColor(Color.BLUE)
-            .fillColor(Color.argb(100, 100, 255, 200))
-
-        googleMap.addCircle(circleOptions)
-
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(point.latitude, point.longitude), 20f))
-
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(12f), 1000, null);
-        */
     }
 
     private fun setOnClickListeners() {
