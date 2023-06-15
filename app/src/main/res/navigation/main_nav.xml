@@ -54,6 +54,10 @@
             android:name="coordinates"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="favourite"
+            app:argType="boolean"
+            android:defaultValue="false"/>
         <action
             android:id="@+id/action_customDialogFragment_to_bookDetailsFragment2"
             app:destination="@id/bookDetailsFragment"

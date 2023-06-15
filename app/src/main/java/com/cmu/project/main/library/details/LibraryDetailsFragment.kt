@@ -86,6 +86,7 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
         setLibraryName(library.name)
         setLocationInfo(library.location)
         setLibraryImage()
+        changeFavouriteButton(args.favourite)
         binding.ratingBar.rating = library.rating
     }
 

@@ -22,6 +22,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.cmu.project.R
 import com.cmu.project.core.activities.StartupActivity
+import com.cmu.project.core.database.CacheDatabase
 import com.cmu.project.core.models.Library
 import com.cmu.project.core.workmanager.WorkManagerScheduler
 import com.cmu.project.databinding.FragmentMapsBinding
@@ -43,6 +44,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -114,11 +116,16 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
         googleMap.setOnMarkerClickListener { marker ->
             marker.tag?.let { data ->
                 val lib = Gson().toJson(data)
-                val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(
-                    library = lib,
-                    coordinates = null
-                )
-                findNavController().navigate(action)
+                var isFavourite = false
+                lifecycleScope.launch(Dispatchers.Main) {
+                    isFavourite = isFavouriteLibrary(Gson().fromJson(lib, Library::class.java))
+                    val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(
+                        library = lib,
+                        coordinates = null,
+                        favourite = isFavourite
+                    )
+                    findNavController().navigate(action)
+                }
             }
             true
         }
