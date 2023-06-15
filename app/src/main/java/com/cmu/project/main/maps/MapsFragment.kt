@@ -116,7 +116,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
                     isFavourite = isFavouriteLibrary(Gson().fromJson(lib, Library::class.java))
                     val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(
                         library = lib,
-                        coordinates = null,
+                        coordinates = Gson().toJson(marker.position),
                         favourite = isFavourite
                     )
                     findNavController().navigate(action)

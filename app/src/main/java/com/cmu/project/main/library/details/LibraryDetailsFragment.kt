@@ -4,44 +4,36 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.Matrix
 import android.location.Geocoder
-import android.location.Location
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.transition.Fade
-import android.transition.Transition
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.Toast
+import android.widget.ImageView
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.cmu.project.R
+import com.cmu.project.core.NetworkManager.checkWifiStatus
 import com.cmu.project.core.models.Library
 import com.cmu.project.databinding.FragmentLibraryDetailsBinding
 import com.cmu.project.main.library.details.libraries.LibraryDetailsAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -56,11 +48,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
+
 class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_library_details),
     LibraryDetailsContract.View {
 
     private lateinit var currentPhotoPath: String
 
+    private var wasLoaded = false
     override lateinit var presenter: LibraryDetailsPresenter
     private val args: LibraryDetailsFragmentArgs by navArgs()
     private lateinit var binding: FragmentLibraryDetailsBinding
@@ -70,9 +64,9 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentLibraryDetailsBinding.bind(view)
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
-        binding = FragmentLibraryDetailsBinding.bind(view)
         binding.rvBooks.layoutManager = LinearLayoutManager(activity)
         binding.rvBooks.adapter = adapter
         presenter = LibraryDetailsPresenter(this)
@@ -124,14 +118,18 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
         val storage = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val imageFile = File.createTempFile("photo", ".jpg", storage)
         currentPhotoPath = imageFile.absolutePath
-        val uri = FileProvider.getUriForFile(requireContext(), "com.cmu.project.fileprovider", imageFile)
+        val uri =
+            FileProvider.getUriForFile(requireContext(), "com.cmu.project.fileprovider", imageFile)
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
         startActivityForResult(intent, 1)
     }
 
     private fun navigateToAddFragment() {
-        val action = LibraryDetailsFragmentDirections.actionLibraryDetailsFragmentToAddBookFragment(library = args.library, coordinates = args.coordinates)
+        val action = LibraryDetailsFragmentDirections.actionLibraryDetailsFragmentToAddBookFragment(
+            library = args.library,
+            coordinates = args.coordinates
+        )
 
         findNavController().navigate(action)
     }
@@ -157,11 +155,16 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
     @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
         googleMap.isMyLocationEnabled = false
-        googleMap.setMapStyle(context?.let { MapStyleOptions.loadRawResourceStyle(it, R.raw.style) })
+        val location = Gson().fromJson(args.coordinates, LatLng::class.java)
+        googleMap.uiSettings.isScrollGesturesEnabled = false;
+        if (location != null) {
+            googleMap.addMarker(MarkerOptions().position(location))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15F))
+        }
     }
 
     private fun setOnClickListeners() {
-        binding.ratingBar.setOnRatingBarChangeListener { _, rating, _ ->  setRating(rating)}
+        binding.ratingBar.setOnRatingBarChangeListener { _, rating, _ -> setRating(rating) }
 
         binding.btnRemoveBook.setOnClickListener { generateCameraIntent() }
 
@@ -171,18 +174,32 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
             val user = FirebaseAuth.getInstance().currentUser
             if (user != null) {
                 lifecycleScope.launch {
-                    presenter.addLibraryToFavourites(user, Gson().fromJson(args.library, Library::class.java))
+                    presenter.addLibraryToFavourites(
+                        user,
+                        Gson().fromJson(args.library, Library::class.java)
+                    )
                 }
+            }
+        }
+
+        binding.imageView2.setOnClickListener {
+            if(!wasLoaded) {
+                wasLoaded = true
+                setLibraryImage(force = true)
             }
         }
     }
 
-    override fun setLibraryImage() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val uri = presenter.getLibraryImage(Gson().fromJson(args.library, Library::class.java))
-            withContext(Dispatchers.Main) {
-                Glide.with(requireContext()).load(uri).transform(CenterCrop(), RoundedCorners(25)).into(binding.imageView2)            }
-        }
+    override fun setLibraryImage(force: Boolean) {
+        if (checkWifiStatus(requireContext()) || force)
+            CoroutineScope(Dispatchers.IO).launch {
+                val uri = presenter.getLibraryImage(Gson().fromJson(args.library, Library::class.java))
+                withContext(Dispatchers.Main) {
+                    Glide.with(requireContext()).load(uri)
+                        .transform(CenterCrop(), RoundedCorners(25))
+                        .into(binding.imageView2)
+                }
+            }
     }
 
     override fun getLibraryName(): String {

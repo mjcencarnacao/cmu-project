@@ -15,7 +15,7 @@ interface LibraryDetailsContract {
 
     interface View : BaseView<LibraryDetailsPresenter> {
         fun provideContext() : Context
-        fun setLibraryImage()
+        fun setLibraryImage(force: Boolean = false)
         fun getLibraryName() : String
         fun setLibraryName(name: String)
         fun goToBookDetails(bundle: Bundle)

@@ -3,7 +3,8 @@ package com.cmu.project.main.library.details
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import com.cmu.project.core.database.CacheDatabase
+import androidx.core.content.ContentProviderCompat.requireContext
+import com.cmu.project.core.NetworkManager
 import com.cmu.project.core.models.Book
 import com.cmu.project.core.models.Library
 import com.cmu.project.main.library.details.libraries.LibraryDetailsViewHolder
@@ -18,7 +19,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) : LibraryDetailsContract.Presenter {
+class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
+    LibraryDetailsContract.Presenter {
 
     private var bookList = mutableListOf<Book>()
     private var storage = FirebaseStorage.getInstance().reference
@@ -27,7 +29,8 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) : L
     private val libraryCollection = Firebase.firestore.collection("libraries")
 
     override suspend fun sendRating(float: Float) {
-        val snapshot = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
+        val snapshot =
+            libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
         val rating = snapshot?.reference?.get()?.await()?.toObject(Library::class.java)?.rating
         if (rating != null) {
             snapshot.reference.update("rating", ((rating + float) / 2)).await()
@@ -80,7 +83,11 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) : L
         holder.setBookTitle(item.title)
         holder.setBookAuthor(item.author)
         holder.setBookRating(item.rating)
-        CoroutineScope(Dispatchers.Main).launch { holder.setBookCover(getCoverImageFromRemote(item)) }
+        CoroutineScope(Dispatchers.Main).launch {
+            holder.setImageListener(getCoverImageFromRemote(item))
+            if (NetworkManager.checkWifiStatus(view.provideContext()))
+                holder.setBookCover(getCoverImageFromRemote(item))
+        }
     }
 
     fun goToBookDetails(bundle: Bundle) {

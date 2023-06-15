@@ -53,9 +53,8 @@ class BookDetailsPresenter(activity: Activity) : BookDetailsContract.Presenter {
         holder.setLibraryRating(item.rating)
 
         CoroutineScope(Dispatchers.Main).launch {
-
             holder.setLibraryLocation(getLibraryReadableLocation(holder.itemView.context, item.location))
-             holder.setLibraryImage(getLibraryImageFromRemote(item))
+            holder.setLibraryImage(getLibraryImageFromRemote(item))
         }
     }
 

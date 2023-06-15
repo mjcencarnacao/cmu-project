@@ -1,16 +1,17 @@
 package com.cmu.project.core.workmanager.notifications
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.cmu.project.R
-import com.cmu.project.core.Collection
-import com.cmu.project.core.NetworkManager
-import com.cmu.project.core.NetworkManager.getRemoteCollection
 import com.cmu.project.core.database.CacheDatabase
 import com.cmu.project.core.workmanager.notifications.NotificationWorker.HOLDER.NOTIFICATION_CHANNEL_ID
 import com.cmu.project.core.workmanager.notifications.NotificationWorker.HOLDER.NOTIFICATION_CHANNEL_NAME
@@ -18,12 +19,15 @@ import com.cmu.project.core.workmanager.notifications.NotificationWorker.HOLDER.
 import com.cmu.project.core.workmanager.notifications.NotificationWorker.HOLDER.TAG
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
-import com.google.gson.Gson
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
-class NotificationWorker(context: Context, workerParams: WorkerParameters) :
+class NotificationWorker(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
     object HOLDER {
@@ -47,37 +51,33 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) :
     }
 
     private fun checkForNotifications() = CoroutineScope(Dispatchers.IO).launch {
-        if(database.userDao().getCurrentUser() != null) {
-            val notifications = Gson().fromJson(
-                database.userDao().getCurrentUser().notifications,
-                Array<DocumentReference>::class.java
-            ).asList()
-            getRemoteCollection(
-                applicationContext,
-                Collection.LIBRARIES
-            )?.documents?.forEach { library ->
-                if (library.get("books") != null) {
-                    val references = library.get("books") as List<*>
-                    references.forEach { book ->
-                        val reference = book as DocumentReference
-                        if (notifications.contains(reference))
-                            deployNotification()
-                    }
+        val ref = Firebase.firestore.collection("users").get().await().filter { it.getString("id") == FirebaseAuth.getInstance().currentUser?.uid }
+        Firebase.firestore.collection("libraries").get().await().forEach { book ->
+            if ((ref.first().reference.get().await().get("notifications") as List<DocumentReference>).any { it in (book.reference.get().await().get("books") as List<DocumentReference>).toSet() }) {
+                withContext(Dispatchers.Main){
+                    deployNotification()
                 }
             }
         }
     }
 
-     private fun deployNotification() {
-        val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
-        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    @SuppressLint("MissingPermission")
+    private fun deployNotification() {
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            NOTIFICATION_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_NAME)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.notification_icons)
             .setContentTitle("Book Available!")
             .setContentText("A book you requested is now available.")
-            .setPriority(NotificationCompat.PRIORITY_MAX).build()
-        notificationManager.notify(NOTIFICATION_ID, notification)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT).setAutoCancel(true).setChannelId(NOTIFICATION_CHANNEL_ID).build()
+        notificationManager.notify(0, notification)
     }
 
 }

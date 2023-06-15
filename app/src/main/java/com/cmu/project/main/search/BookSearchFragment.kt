@@ -1,6 +1,7 @@
 package com.cmu.project.main.search
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -23,10 +24,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class BookSearchFragment : Fragment(R.layout.fragment_book_search) {
+class BookSearchFragment : Fragment(R.layout.fragment_book_search), BookSearchContract.View {
 
     private lateinit var binding: FragmentBookSearchBinding
-    var adapter: BookSearchAdapter = BookSearchAdapter(BookSearchPresenter())
+    var adapter: BookSearchAdapter = BookSearchAdapter(BookSearchPresenter(this))
     private val bookCollection = Firebase.firestore.collection("books")
 
     // Pagination
@@ -165,6 +166,10 @@ class BookSearchFragment : Fragment(R.layout.fragment_book_search) {
             }
             binding.progressBar.visibility = View.INVISIBLE
         }
+    }
+
+    override fun provideContext(): Context {
+        return requireContext()
     }
 
 }
