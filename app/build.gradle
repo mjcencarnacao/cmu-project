@@ -110,13 +110,6 @@ dependencies {
     implementation "androidx.room:room-ktx:2.5.1"
     kapt "androidx.room:room-compiler:2.5.1"
 
-    /**
-     * Swipe to Refresh
-     * https://developer.android.com/develop/ui/views/touch-and-input/swipe/add-swipe-interface
-     */
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
-
-
 }
 
 kapt {

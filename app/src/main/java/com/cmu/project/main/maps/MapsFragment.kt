@@ -19,14 +19,11 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.cmu.project.R
 import com.cmu.project.core.activities.StartupActivity
-import com.cmu.project.core.database.CacheDatabase
 import com.cmu.project.core.models.Library
 import com.cmu.project.core.workmanager.WorkManagerScheduler
 import com.cmu.project.databinding.FragmentMapsBinding
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -38,17 +35,14 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 
 class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
     NavigationView.OnNavigationItemSelectedListener {
@@ -69,7 +63,8 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
         binding = FragmentMapsBinding.bind(view)
 
         if (currentUser != null)
-            binding.navView.getHeaderView(0).findViewById<TextView>(R.id.userNameText).text = "Hi ${currentUser?.email}!"
+            binding.navView.getHeaderView(0).findViewById<TextView>(R.id.userNameText).text =
+                "Hi ${currentUser?.email}!"
 
         WorkManagerScheduler(requireContext())
     }
@@ -133,7 +128,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
         googleMap.setOnMyLocationChangeListener {
             val nearbyLibs = HashMap<Float, Pair<Library, Marker>>()
 
-            for ( (lib, marker) in renderedLibraries) {
+            for ((lib, marker) in renderedLibraries) {
                 val libLoc = Location("")
                 libLoc.longitude = lib.location.longitude
                 libLoc.latitude = lib.location.latitude
@@ -166,10 +161,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
 
         binding.btnMenu.setOnClickListener { binding.drawerLayout.openDrawer(Gravity.LEFT) }
 
-        binding.swiperefresh.setOnRefreshListener{
-            setupLibraryMarkers(googleMap, true)
-            binding.swiperefresh.isRefreshing = false;
-        }
+        binding.btnRefresh.setOnClickListener { setupLibraryMarkers(googleMap, true) }
 
     }
 
@@ -192,7 +184,10 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
     private fun shareToSocialMedia() {
         val intent = Intent();
         intent.action = Intent.ACTION_SEND;
-        intent.putExtra(Intent.EXTRA_TEXT, "Share and manage libraries effortlessly with LibrarIST.");
+        intent.putExtra(
+            Intent.EXTRA_TEXT,
+            "Share and manage libraries effortlessly with LibrarIST."
+        );
         intent.type = "text/plain";
         startActivity(Intent.createChooser(intent, "Share"));
     }
@@ -208,7 +203,8 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
             presenter.retrieveLibrariesFromCloud(refresh).forEach { library ->
                 val position = LatLng(library.location.latitude, library.location.longitude)
                 withContext(Dispatchers.Main) {
-                    val marker = googleMap.addMarker(MarkerOptions().position(position).title(library.name))
+                    val marker =
+                        googleMap.addMarker(MarkerOptions().position(position).title(library.name))
                     marker?.tag = library
 
                     val icon: Bitmap
@@ -220,9 +216,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
                                 R.drawable.iv_search_fav
                             ), 80, 80, false
                         )
-                    }
-
-                    else {
+                    } else {
                         icon = createScaledBitmap(
                             decodeResource(
                                 requireContext().resources,
