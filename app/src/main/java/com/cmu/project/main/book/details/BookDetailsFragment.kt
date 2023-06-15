@@ -53,7 +53,7 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
         binding.bookDetail.itemBookTitle.text = book.title
 
         lifecycleScope.launch {
-            val url = storage.child("books/" + book.id).downloadUrl.await()
+            val url = storage.child("books/" + book.id.trim()).downloadUrl.await()
             Glide.with(this@BookDetailsFragment)
                 .load(url)
                 .into(binding.bookDetail.itemBookImg)

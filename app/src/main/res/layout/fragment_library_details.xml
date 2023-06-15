@@ -1,9 +1,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/libraryImage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="bottom">
+    android:layout_gravity="bottom"
+    android:visibility="visible"
+    tools:visibility="visible">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
@@ -38,7 +41,8 @@
         app:layout_constraintEnd_toEndOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_camera" />
+        app:srcCompat="@drawable/ic_camera"
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -48,7 +52,8 @@
         android:background="@drawable/sh_rounded_corner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline3">
+        app:layout_constraintTop_toTopOf="@id/guideline3"
+        tools:visibility="visible">
 
         <View
             android:layout_width="100dp"
@@ -159,6 +164,7 @@
                 app:srcCompat="@android:drawable/ic_menu_mylocation" />
 
             <TextView
+                android:id="@+id/libLocText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/small_dummy_text"
@@ -171,9 +177,11 @@
                 android:id="@+id/mapView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -189,10 +197,12 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvBooks"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="345dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="40dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvBooksTitle"

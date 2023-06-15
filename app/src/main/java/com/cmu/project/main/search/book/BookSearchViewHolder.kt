@@ -25,8 +25,8 @@ class BookSearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     }
 
     override fun setBookCover(url: Uri?) {
-        Log.i("URL", "URL: $url")
-        Glide.with(itemView.context).load(url).into(binding.itemBookImg)
+        if (url != null)
+            Glide.with(itemView.context).load(url).into(binding.itemBookImg)
     }
 
 }

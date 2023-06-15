@@ -30,7 +30,6 @@ class BookDetailsPresenter(activity: Activity) : BookDetailsContract.Presenter {
     private val libraryCollection = Firebase.firestore.collection("libraries")
     private var storage = FirebaseStorage.getInstance().reference
 
-
     init {
         setLastLocation(activity)
     }

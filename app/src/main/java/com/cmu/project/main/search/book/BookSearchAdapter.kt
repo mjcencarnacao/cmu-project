@@ -46,4 +46,8 @@ class BookSearchAdapter(private val presenter: BookSearchPresenter) :
         notifyDataSetChanged()
     }
 
+    fun getAlreadyFetchedBooks(): MutableList<Book> {
+        return presenter.getAlreadyFetchedBooks()
+    }
+
 }
