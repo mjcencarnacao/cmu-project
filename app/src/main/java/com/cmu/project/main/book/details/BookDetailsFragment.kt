@@ -48,6 +48,7 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
     }
 
     private fun setBookInformation() {
+        binding.bookDetail.bookNotification.visibility = View.GONE
         binding.bookDetail.itemBookAuthor.text = book.author
         binding.bookDetail.itemBookRatingbar.rating = book.rating
         binding.bookDetail.itemBookTitle.text = book.title

@@ -25,6 +25,7 @@ class LibraryDetailsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
     private var binding: ListItemBinding = ListItemBinding.bind(itemView)
 
     override fun setBookTitle(title: String) {
+        binding.bookNotification.visibility = View.GONE
         binding.itemBookTitle.text = title
     }
 

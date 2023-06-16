@@ -42,10 +42,14 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
         var totalRating = 0
         var reviewCount = 0
         val snapshot = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
-        val reviews = snapshot?.reference!!.get().await().get("reviews") as HashMap<String, Int>
-        reviewCount = reviews.values.size
-        reviews.forEach { (t, u) -> totalRating += u }
-        return (totalRating / reviewCount).toFloat()
+        val reviewsRef = snapshot?.reference!!.get().await().get("reviews")
+        if(reviewsRef != null) {
+            val reviews = snapshot?.reference!!.get().await().get("reviews") as HashMap<String, Int>
+            reviewCount = reviews.values.size
+            reviews.forEach { (t, u) -> totalRating += u }
+            return (totalRating / reviewCount).toFloat()
+        }
+        return 0f
     }
 
     override suspend fun getLibraryImage(library: Library): Uri? {
