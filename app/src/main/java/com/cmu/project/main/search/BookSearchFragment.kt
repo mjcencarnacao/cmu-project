@@ -46,7 +46,7 @@ class BookSearchFragment : Fragment(R.layout.fragment_book_search), BookSearchCo
     private val initialItemCount = 5L
 
     private lateinit var binding: FragmentBookSearchBinding
-    private lateinit var database : CacheDatabase
+    private lateinit var database: CacheDatabase
     private val bookCollection = Firebase.firestore.collection("books")
     var adapter: BookSearchAdapter = BookSearchAdapter(BookSearchPresenter(this))
 
@@ -77,14 +77,18 @@ class BookSearchFragment : Fragment(R.layout.fragment_book_search), BookSearchCo
             totalItems = manager.itemCount
             scrolledOutItems = manager.findLastCompletelyVisibleItemPosition()
 
-            Log.i(TAG, "Scrolling = $isScrolling | Current Items = $currentItems | Scrolled Items = $scrolledOutItems | Total Items = $totalItems")
+            Log.i(
+                TAG,
+                "Scrolling = $isScrolling | Current Items = $currentItems | Scrolled Items = $scrolledOutItems | Total Items = $totalItems"
+            )
 
-            if (isScrolling && (scrolledOutItems) == totalItems - 1) {
-                Log.i(TAG, "Getting more books...")
-                isScrolling = false
-                showProgressBar()
-                lifecycleScope.launch(Dispatchers.IO) { getBooks() }
-            }
+            if (checkWifiStatus(requireContext()))
+                if (isScrolling && (scrolledOutItems) == totalItems - 1) {
+                    Log.i(TAG, "Getting more books...")
+                    isScrolling = false
+                    showProgressBar()
+                    lifecycleScope.launch(Dispatchers.IO) { getBooks() }
+                }
         }
     }
 
@@ -107,7 +111,7 @@ class BookSearchFragment : Fragment(R.layout.fragment_book_search), BookSearchCo
 
     @SuppressLint("SetTextI18n")
     private suspend fun getBooks() {
-        if(checkWifiStatus(requireContext())) {
+        if (checkWifiStatus(requireContext())) {
             if (isMaxData) {
                 dismissProgressBar()
                 return
@@ -150,7 +154,7 @@ class BookSearchFragment : Fragment(R.layout.fragment_book_search), BookSearchCo
 
             dismissProgressBar()
         } else {
-            val collection = adapter.getAlreadyFetchedBooks()
+            val collection = mutableListOf<Book>()
             database.bookDao().getAll().forEach {
                 collection.add(it.toBookModel())
             }

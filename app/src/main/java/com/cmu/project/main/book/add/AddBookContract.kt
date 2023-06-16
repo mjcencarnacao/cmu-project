@@ -8,6 +8,7 @@ import com.google.firebase.firestore.DocumentReference
 interface AddBookContract {
 
     interface View : BaseView<AddBookPresenter> {
+        fun alertISBNFailure()
         fun dismissDialog()
         fun getLibraryName() : String
         fun getBookImage() : Bitmap?

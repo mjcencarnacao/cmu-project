@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
@@ -42,6 +43,10 @@ class AddBookFragment : DialogFragment(R.layout.fragment_add_book), AddBookContr
             }
             binding.btnBookImage.setImageResource(R.drawable.ic_correct)
         }
+    }
+
+    override fun alertISBNFailure() {
+        Toast.makeText(requireContext(), "There was a problem checking the ISBN. Register in another way.", Toast.LENGTH_LONG).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

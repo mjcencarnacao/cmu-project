@@ -50,15 +50,20 @@ class AddBookPresenter(private val view: AddBookContract.View) : AddBookContract
             val collectionFiltered = bookCollection.get().await().filter { it.get("code") == id.toLong() }
             if (collectionFiltered.isEmpty()) {
                 api.getBookDetails(id).body()?.let {
-                    val title = it.items[0].volumeInfo.title
-                    val author = it.items[0].volumeInfo.authors[0]
-                    val book = Book(id, title, id.toLong(), author, 0.0F)
-                    val ref = bookCollection.add(book).await()
-                    ref.update("id", ref.id).await()
-                    addBookToLibrary(ref)
-                    val imageUrl = URL(it.items[0].volumeInfo.imageLinks.thumbnail)
-                    val image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream())
-                    storage.child("books/" + ref.id).putBytes(convertBitmapToByteArray(image)).await()
+                    if(it.items != null && it.items.isNotEmpty()) {
+                        val title = it.items[0].volumeInfo.title
+                        val author = it.items[0].volumeInfo.authors[0]
+                        val book = Book(id, title, id.toLong(), author, 0.0F)
+                        val ref = bookCollection.add(book).await()
+                        ref.update("id", ref.id).await()
+                        addBookToLibrary(ref)
+                        val imageUrl = URL(it.items[0].volumeInfo.imageLinks.thumbnail)
+                        val image =
+                            BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream())
+                        storage.child("books/" + ref.id).putBytes(convertBitmapToByteArray(image))
+                            .await()
+                    } else
+                        view.alertISBNFailure()
                 }
             } else
                 addBookToLibrary(collectionFiltered.first().reference)
