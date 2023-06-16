@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LibrarIST</string>
-    <string name="sign_in">Sign In</string>
-    <string name="sign_up">Sign up</string>
-    <string name="forgot_password">Forgot Password</string>
-    <string name="welcome_back">Welcome\nBack</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="todo">TODO</string>
-    <string name="confirm_password">Confirm Password</string>
-    <string name="name">Name</string>
-    <string name="lets_get_started">Lets Get\nStarted</string>
-    <string name="add_library">Add Library</string>
-    <string name="library_name">Library Name</string>
-    <string name="library_title">Library Title</string>
-    <string name="search_books">Search Books</string>
-    <string name="share">Share</string>
-    <string name="logout">Logout</string>
-    <string name="account">Account</string>
-    <string name="communication">Communication</string>
-    <string name="books_available">Books Available</string>
-    <string name="library_dialog_description">To add or remove a book from the library simply use the buttons above. Libraries can be added to user favourites. Bellow there is a list of the books available.</string>
+    <string name="app_name">Библиотека IST</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="forgot_password">Забыли пароль</string>
+    <string name="welcome_back">Добро пожаловать\nобратно</string>
+    <string name="email">Электронная почта</string>
+    <string name="password">Пароль</string>
+    <string name="todo">Дела</string>
+    <string name="confirm_password">Подтвердите пароль</string>
+    <string name="name">Имя</string>
+    <string name="lets_get_started">Начнем</string>
+    <string name="add_library">Добавить библиотеку</string>
+    <string name="library_name">Название библиотеки</string>
+    <string name="library_title">Название библиотеки</string>
+    <string name="search_books">Поиск книг</string>
+    <string name="share">Поделиться</string>
+    <string name="logout">Выйти</string>
+    <string name="account">Учетная запись</string>
+    <string name="communication">Связь</string>
+    <string name="books_available">Доступные книги</string>
+    <string name="library_dialog_description">Чтобы добавить или удалить книгу из библиотеки, просто используйте кнопки выше. Библиотеки можно добавлять в избранное пользователя. Ниже приведен список доступных книг.</string>
     <string name="small_dummy_text" translatable="false">Lorem ipsum dolor sit amet</string>
     <string name="medium_dummy_text" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac orci ac est tempus scelerisque. Nullam hendrerit dui id nisi pellentesque, id lacinia velit efficitur. Integer hendrerit, lectus ut mattis rutrum, dui nibh commodo lacus, non dictum sem metus ac tellus. Sed tempus scelerisque erat, nec feugiat lacus commodo sed. Phasellus et finibus sapien. Integer tincidunt nisl in vulputate venenatis. Proin pharetra aliquet libero sed gravida. Vivamus non placerat nisi, id lacinia metus. Nulla facilisi. Curabitur accumsan sapien velit, ut euismod neque fringilla eu. Donec pharetra diam vel erat cursus, at tincidunt turpis feugiat.</string>
     <string name="large_dummy_text" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae justo euismod, rutrum libero sed, semper quam. In aliquam turpis nec leo tempor bibendum. Proin efficitur neque nec metus gravida, id egestas nulla ultrices. Fusce venenatis metus non massa euismod, sed cursus mi dictum. Sed sit amet posuere velit. Integer tincidunt congue convallis. Fusce ultrices ligula at nisi convallis, a pulvinar tellus blandit. Fusce sollicitudin leo a facilisis dictum. Vivamus sit amet est ipsum. Nullam et turpis sit amet tellus finibus finibus a vel elit. Donec sodales efficitur arcu, a facilisis purus elementum ut. Suspendisse sagittis ligula sed nibh varius, vel finibus libero euismod. Sed interdum eros nec justo condimentum, vitae volutpat velit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer tristique est sit amet consectetur interdum. Aliquam non enim ac diam malesuada consectetur ut ut justo. Sed vel feugiat urna.</string>
-    <string name="score">score</string>
-    <string name="book_name">Book Name</string>
-    <string name="add_book">Add Book</string>
+    <string name="score">Оценка</string>
+    <string name="book_name">Название книги</string>
+    <string name="add_book">Добавить книгу</string>
 </resources>

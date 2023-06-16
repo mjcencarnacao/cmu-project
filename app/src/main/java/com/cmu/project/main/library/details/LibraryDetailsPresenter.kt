@@ -34,7 +34,7 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
         FirebaseAuth.getInstance().currentUser?.let {
             val reviews = snapshot?.reference!!.get().await().get("reviews") as HashMap<String, Float>
             reviews[it.uid] = float
-            snapshot?.reference!!.update("reviews", reviews)
+            snapshot.reference!!.update("reviews", reviews)
         }
     }
 
@@ -44,7 +44,7 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
         val snapshot = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
         val reviewsRef = snapshot?.reference!!.get().await().get("reviews")
         if(reviewsRef != null) {
-            val reviews = snapshot?.reference!!.get().await().get("reviews") as HashMap<String, Int>
+            val reviews = snapshot.reference!!.get().await().get("reviews") as HashMap<String, Int>
             reviewCount = reviews.values.size
             reviews.forEach { (t, u) -> totalRating += u }
             return (totalRating / reviewCount).toFloat()

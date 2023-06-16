@@ -154,7 +154,7 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
     private val callback = OnMapReadyCallback { googleMap ->
         googleMap.isMyLocationEnabled = false
         val location = Gson().fromJson(args.library, Library::class.java)
-        googleMap.uiSettings.isScrollGesturesEnabled = false;
+        googleMap.uiSettings.isScrollGesturesEnabled = false
         if (location != null) {
             googleMap.addMarker(MarkerOptions().position(LatLng(location.location.latitude, location.location.longitude)))
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.location.latitude, location.location.longitude), 15F))

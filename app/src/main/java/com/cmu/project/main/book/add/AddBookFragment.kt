@@ -35,7 +35,7 @@ class AddBookFragment : DialogFragment(R.layout.fragment_add_book), AddBookContr
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             val scanner = BarcodeScanning.getClient()
-            bookImage = fixImageOrientation(BitmapFactory.decodeFile(currentPhotoPath))
+            bookImage = rotateImage(BitmapFactory.decodeFile(currentPhotoPath))
             val image = InputImage.fromBitmap(bookImage!!, 0)
             scanner.process(image).addOnSuccessListener {
                 it.forEach { code -> presenter.addBookToFirebaseWithCode(code.displayValue!!); dismiss() }
@@ -89,14 +89,9 @@ class AddBookFragment : DialogFragment(R.layout.fragment_add_book), AddBookContr
         return Gson().fromJson(args.library, Library::class.java).name
     }
 
-    private fun fixImageOrientation(bitmap: Bitmap): Bitmap {
-        val degrees = 90f
-        return rotateImage(bitmap, degrees)
-    }
-
-    private fun rotateImage(bitmap: Bitmap, degrees: Float): Bitmap {
+    private fun rotateImage(bitmap: Bitmap): Bitmap {
         val matrix = Matrix()
-        matrix.postRotate(degrees)
+        matrix.postRotate(90f)
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 

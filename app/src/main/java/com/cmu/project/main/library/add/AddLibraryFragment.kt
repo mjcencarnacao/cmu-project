@@ -31,7 +31,7 @@ import com.google.mlkit.vision.common.InputImage
 import java.io.File
 
 
-class AddLibraryFragment : BottomSheetDialogFragment(com.cmu.project.R.layout.fragment_add_library), AddLibraryContract.View {
+class AddLibraryFragment : BottomSheetDialogFragment(R.layout.fragment_add_library), AddLibraryContract.View {
 
     private var libraryImage: Bitmap? = null
     override lateinit var presenter: AddLibraryPresenter
@@ -43,8 +43,8 @@ class AddLibraryFragment : BottomSheetDialogFragment(com.cmu.project.R.layout.fr
     @Deprecated("Deprecated")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 1 &&  resultCode == Activity.RESULT_OK){
-            libraryImage = fixImageOrientation(BitmapFactory.decodeFile(currentPhotoPath))
+        if(requestCode == 1 &&  resultCode == RESULT_OK){
+            libraryImage = rotateImage(BitmapFactory.decodeFile(currentPhotoPath))
             Glide.with(requireContext()).load(libraryImage).transform(CenterCrop(), RoundedCorners(25)).into(binding.imageView2)
         }
     }
@@ -101,14 +101,9 @@ class AddLibraryFragment : BottomSheetDialogFragment(com.cmu.project.R.layout.fr
         dismiss()
     }
 
-    private fun fixImageOrientation(bitmap: Bitmap): Bitmap {
-        val degrees = 90f
-        return rotateImage(bitmap, degrees)
-    }
-
-    private fun rotateImage(bitmap: Bitmap, degrees: Float): Bitmap {
+    private fun rotateImage(bitmap: Bitmap): Bitmap {
         val matrix = Matrix()
-        matrix.postRotate(degrees)
+        matrix.postRotate(90f)
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 

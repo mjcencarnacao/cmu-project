@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">图书馆IST</string>
+    <string name="sign_in">登录</string>
+    <string name="sign_up">注册</string>
+    <string name="forgot_password">忘记密码</string>
+    <string name="welcome_back">欢迎\n回来</string>
+    <string name="email">电子邮件</string>
+    <string name="password">密码</string>
+    <string name="todo">待办事项</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="name">姓名</string>
+    <string name="lets_get_started">开始吧</string>
+    <string name="add_library">添加图书馆</string>
+    <string name="library_name">图书馆名称</string>
+    <string name="library_title">图书馆标题</string>
+    <string name="search_books">搜索图书</string>
+    <string name="share">分享</string>
+    <string name="logout">退出</string>
+    <string name="account">账号</string>
+    <string name="communication">通讯</string>
+    <string name="books_available">可用图书</string>
+    <string name="library_dialog_description">要向图书馆添加或删除图书，只需使用上方的按钮。图书馆可以添加到用户的收藏夹中。下方是可用图书的列表。</string>
+    <string name="score">分数</string>
+    <string name="book_name">图书名称</string>
+    <string name="add_book">添加图书</string>
+</resources>

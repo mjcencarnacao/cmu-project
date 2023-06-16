@@ -59,7 +59,7 @@ class AddBookPresenter(private val view: AddBookContract.View) : AddBookContract
                     addBookToLibrary(ref)
                     val imageUrl = URL(it.items[0].volumeInfo.imageLinks.thumbnail)
                     val image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream())
-                    storage.child("books/" + ref.id).putBytes(Utils.convertBitmapToByteArray(image)).await()
+                    storage.child("books/" + ref.id).putBytes(convertBitmapToByteArray(image)).await()
                 }
             } else
                 addBookToLibrary(collectionFiltered.first().reference)

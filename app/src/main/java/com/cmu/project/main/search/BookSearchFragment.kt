@@ -55,15 +55,6 @@ class BookSearchFragment : Fragment(R.layout.fragment_book_search), BookSearchCo
         setSearchViewListeners()
     }
 
-    /*
-    private suspend fun retrieveBooksFromCloud() {
-        val collection = mutableListOf<Book>()
-        val books = bookCollection.get().await()
-        books.forEach { document -> collection.add(document.toObject(Book::class.java).apply { id = document.id }) }
-        withContext(Dispatchers.Main){ adapter.updateList(collection) }
-    }
-    */
-
     private val scrollListener = object : RecyclerView.OnScrollListener() {
 
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

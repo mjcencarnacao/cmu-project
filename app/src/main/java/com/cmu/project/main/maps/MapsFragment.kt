@@ -172,7 +172,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
             R.id.navRate -> shareToSocialMedia()
 
         }
-        binding.drawerLayout.closeDrawer(GravityCompat.START);
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
@@ -182,14 +182,14 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
     }
 
     private fun shareToSocialMedia() {
-        val intent = Intent();
-        intent.action = Intent.ACTION_SEND;
+        val intent = Intent()
+        intent.action = Intent.ACTION_SEND
         intent.putExtra(
             Intent.EXTRA_TEXT,
             "Share and manage libraries effortlessly with LibrarIST."
-        );
-        intent.type = "text/plain";
-        startActivity(Intent.createChooser(intent, "Share"));
+        )
+        intent.type = "text/plain"
+        startActivity(Intent.createChooser(intent, "Share"))
     }
 
     override fun startStartupActivity() {
