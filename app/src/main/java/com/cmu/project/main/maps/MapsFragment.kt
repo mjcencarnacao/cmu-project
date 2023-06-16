@@ -53,7 +53,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
     private lateinit var binding: FragmentMapsBinding
     private var currentUser = FirebaseAuth.getInstance().currentUser
     private val renderedLibraries: MutableMap<Library, Marker> = HashMap()
-    private lateinit var userLocation: Location
+    private var userLocation: Location? = null
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -108,13 +108,15 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
                         val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(library = lib, coordinates = Gson().toJson(marker.position), favourite = isFavourite)
                         findNavController().navigate(action)
                     }
-                    getDirections(
-                        googleMap,
-                        userLocation.latitude,
-                        userLocation.longitude,
-                        (data as Library).location.latitude,
-                        data.location.longitude
-                    )
+                    userLocation?.let {
+                        getDirections(
+                            googleMap,
+                            it.latitude,
+                            it.longitude,
+                            (data as Library).location.latitude,
+                            data.location.longitude
+                        )
+                    }
                 }
             }
             true
