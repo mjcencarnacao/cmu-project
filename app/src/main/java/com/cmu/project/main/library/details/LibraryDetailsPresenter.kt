@@ -3,7 +3,6 @@ package com.cmu.project.main.library.details
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.cmu.project.core.NetworkManager
 import com.cmu.project.core.models.Book
 import com.cmu.project.core.models.Library
@@ -30,9 +29,11 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
     private val libraryCollection = Firebase.firestore.collection("libraries")
 
     override suspend fun sendRating(float: Float) {
-        val snapshot = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
+        val snapshot =
+            libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
         FirebaseAuth.getInstance().currentUser?.let {
-            val reviews = snapshot?.reference!!.get().await().get("reviews") as HashMap<String, Float>
+            val reviews =
+                snapshot?.reference!!.get().await().get("reviews") as HashMap<String, Float>
             reviews[it.uid] = float
             snapshot.reference!!.update("reviews", reviews)
         }
@@ -41,13 +42,15 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
     override suspend fun getRating(): Float {
         var totalRating = 0
         var reviewCount = 0
-        val snapshot = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
+        val snapshot =
+            libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
         val reviewsRef = snapshot?.reference!!.get().await().get("reviews")
-        if(reviewsRef != null) {
+        if (reviewsRef != null) {
             val reviews = snapshot.reference!!.get().await().get("reviews") as HashMap<String, Int>
             reviewCount = reviews.values.size
             reviews.forEach { (t, u) -> totalRating += u }
-            return (totalRating / reviewCount).toFloat()
+            if (reviewCount != 0)
+                return (totalRating / reviewCount).toFloat()
         }
         return 0f
     }
