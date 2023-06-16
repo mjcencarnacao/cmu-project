@@ -2,6 +2,7 @@ package com.cmu.project.main.library.add
 
 import com.cmu.project.core.Utils.convertBitmapToByteArray
 import com.cmu.project.core.models.Library
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -20,6 +21,7 @@ class AddLibraryPresenter(private val view: AddLibraryContract.View) : AddLibrar
         CoroutineScope(Dispatchers.IO).launch {
             val ref = libraryCollection.add(Library(name = name, location = geoPoint)).await()
             ref.update("id", ref.id).await()
+            ref.update("books", mutableListOf<DocumentReference>()).await()
             storage.child("libraries/" + ref.id).putBytes(convertBitmapToByteArray(view.getLibraryImage()!!)).await()
         }
     }
