@@ -26,8 +26,6 @@ class BookDetailsAdapter(private val presenter: BookDetailsPresenter) : Recycler
 
     override fun onBindViewHolder(holder: BookDetailsViewHolder, position: Int) {
         presenter.onBindLibrarySearchViewHolder(holder, position)
-
-        // Probably to request directions to the library
         holder.itemView.setOnClickListener {
             val selectedLibrary = Gson().toJson(presenter.getLibraryAtPosition(position))
             val action = BookDetailsFragmentDirections.actionBookDetailsFragmentToLibraryDetailsFragment(library = selectedLibrary, coordinates = null)

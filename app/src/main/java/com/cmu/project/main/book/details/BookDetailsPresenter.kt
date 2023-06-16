@@ -63,8 +63,6 @@ class BookDetailsPresenter(activity: Activity) : BookDetailsContract.Presenter {
         }
     }
 
-    // private suspend fun getLibraryImageFromRemote(library: Library) Uri? {}
-
     private fun getLibraryReadableLocation(context: Context, point: GeoPoint): String {
         val geocoder = Geocoder(context)
         val address = geocoder.getFromLocation(point.latitude, point.longitude, 1)
@@ -95,11 +93,9 @@ class BookDetailsPresenter(activity: Activity) : BookDetailsContract.Presenter {
     suspend fun retrieveApplicableLibrariesFromCloud(book: Book): SortedMap<Float, Library> {
         val collection = mutableMapOf<Float, Library>()
         val libs = libraryCollection.get().await()
-        // For each library
         for (document in libs) {
             val booksRefs = document.get("books") as List<*>?
             if (booksRefs != null) {
-                // Check if the library owns at least this book
                 for (ref in booksRefs) {
                     if (ref is DocumentReference) {
                         if (ref.id == book.id) {

@@ -26,8 +26,6 @@ class LibraryDetailsAdapter(private val presenter: LibraryDetailsPresenter) :
 
     override fun onBindViewHolder(holder: LibraryDetailsViewHolder, position: Int) {
         presenter.onBindBookSearchViewHolder(holder, position)
-
-        // Go to book details
         holder.itemView.setOnClickListener {
             val selectedBook = Gson().toJson(presenter.getBookAtPosition(position))
             val bundle = Bundle().apply {  putString("book", selectedBook) }

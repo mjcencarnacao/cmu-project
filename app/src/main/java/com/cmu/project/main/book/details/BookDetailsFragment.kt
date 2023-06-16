@@ -25,7 +25,6 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
     private lateinit var presenter: BookDetailsPresenter
     private var storage = FirebaseStorage.getInstance().reference
 
-    // Safe Args
     private val args: BookDetailsFragmentArgs by navArgs()
     private lateinit var book: Book
 

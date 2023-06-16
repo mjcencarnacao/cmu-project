@@ -12,7 +12,6 @@ interface BookDetailsContract {
         fun setLibraryLocation(location: String)
         fun setLibraryRating(rating: Float)
         fun setLibraryImage(url: Uri?)
-        // fun setLibraryDistanceFromUser()
     }
 
     interface Presenter : BasePresenter {
