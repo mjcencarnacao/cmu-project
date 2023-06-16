@@ -26,7 +26,7 @@ class BookDetailsPresenter(activity: Activity) : BookDetailsContract.Presenter {
 
     private var libraryList = mutableListOf<Library>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var myLocation: Location
+    private var myLocation: Location? = null
     private val libraryCollection = Firebase.firestore.collection("libraries")
     private var storage = FirebaseStorage.getInstance().reference
 
@@ -53,7 +53,12 @@ class BookDetailsPresenter(activity: Activity) : BookDetailsContract.Presenter {
         holder.setLibraryRating(item.rating)
 
         CoroutineScope(Dispatchers.Main).launch {
-            holder.setLibraryLocation(getLibraryReadableLocation(holder.itemView.context, item.location))
+            holder.setLibraryLocation(
+                getLibraryReadableLocation(
+                    holder.itemView.context,
+                    item.location
+                )
+            )
             holder.setLibraryImage(getLibraryImageFromRemote(item))
         }
     }
@@ -113,7 +118,9 @@ class BookDetailsPresenter(activity: Activity) : BookDetailsContract.Presenter {
         val loc = Location("")
         loc.latitude = point.latitude
         loc.longitude = point.longitude
-        return myLocation.distanceTo(loc)
+        if (myLocation != null)
+            return myLocation!!.distanceTo(loc)
+        return 0f
     }
 
 }
