@@ -20,12 +20,8 @@ class RegisterPresenter(private val view: RegisterContract.View) : RegisterContr
         const val TAG = "RegisterPresenter"
     }
 
-    private val database = CacheDatabase.getInstance(view.provideContext())
-
     override suspend fun saveUserToCollection(user: User) {
         Firebase.firestore.collection("users").add(user).await()
-        database.userDao().delete()
-        database.userDao().insert(user.toUserEntity())
     }
 
     override suspend fun signUpWithEmailAndPassword(name: String, email: String, password: String) {

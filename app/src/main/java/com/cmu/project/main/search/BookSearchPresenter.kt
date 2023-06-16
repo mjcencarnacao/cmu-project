@@ -2,6 +2,8 @@ package com.cmu.project.main.search
 
 import android.net.Uri
 import android.util.Log
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.cmu.project.core.NetworkManager
 import com.cmu.project.core.models.Book
 import com.cmu.project.main.search.book.BookSearchViewHolder
@@ -33,9 +35,12 @@ class BookSearchPresenter(private val view : BookSearchContract.View) : BookSear
             holder.setBookNotification(book.reference)
         }
         CoroutineScope(Dispatchers.Main).launch {
-            holder.setImageListener(getCoverImageFromRemote(item))
+            val uri = getCoverImageFromRemote(item)
+            holder.setImageListener(uri)
             if (NetworkManager.checkWifiStatus(view.provideContext()))
-                holder.setBookCover(getCoverImageFromRemote(item))
+                holder.setBookCover(uri, cached = false)
+            else
+                holder.setBookCover(uri, cached = true)
         }
     }
 
@@ -61,7 +66,6 @@ class BookSearchPresenter(private val view : BookSearchContract.View) : BookSear
 
     fun updateList(list: MutableList<Book>) {
         this.bookList = list
-
         if (fullBookList.isEmpty())
             fullBookList = list
     }

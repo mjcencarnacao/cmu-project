@@ -239,8 +239,8 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
     override fun setLibraryImage(force: Boolean) {
         if (checkWifiStatus(requireContext()) || force)
             CoroutineScope(Dispatchers.IO).launch {
-                val uri =
-                    presenter.getLibraryImage(Gson().fromJson(args.library, Library::class.java))
+                val uri = presenter.getLibraryImage(Gson().fromJson(args.library, Library::class.java))
+                if(uri != null)
                 withContext(Dispatchers.Main) {
                     Glide.with(requireContext()).load(uri)
                         .transform(CenterCrop(), RoundedCorners(25))

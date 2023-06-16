@@ -5,6 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cmu.project.R
+import com.cmu.project.core.models.Book
 import com.cmu.project.databinding.ListItemBinding
 import com.cmu.project.main.search.BookSearchContract
 import com.google.firebase.auth.FirebaseAuth
@@ -37,9 +38,11 @@ class LibraryDetailsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
         binding.itemBookRatingbar.rating = rating
     }
 
-    override fun setBookCover(url: Uri?) {
-        Glide.with(itemView.context).load(url).into(binding.itemBookImg)
-    }
+    override fun setBookCover(url: Uri?, cached: Boolean) {
+        if (url != null && !cached)
+            Glide.with(itemView.context).load(url).into(binding.itemBookImg)
+        else if(url != null)
+            Glide.with(itemView.context).load(url).onlyRetrieveFromCache(true).into(binding.itemBookImg)    }
 
     override fun setImageListener(url: Uri?) {
         binding.itemBookImg.setOnClickListener {

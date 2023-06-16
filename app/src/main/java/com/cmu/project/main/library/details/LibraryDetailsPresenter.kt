@@ -76,7 +76,11 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
     }
 
     override suspend fun getLibraryImage(library: Library): Uri? {
-        return storage.child("libraries/" + library.id.trim()).downloadUrl.await()
+        return try {
+            storage.child("libraries/" + library.id.trim()).downloadUrl.await()
+        } catch (e: Exception) {
+            null
+        }
     }
 
     override fun removeBookFromLibrary(id: String) {
@@ -118,9 +122,12 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
         holder.setBookAuthor(item.author)
         holder.setBookRating(item.rating)
         CoroutineScope(Dispatchers.Main).launch {
-            holder.setImageListener(getCoverImageFromRemote(item))
+            val uri = getCoverImageFromRemote(item)
+            holder.setImageListener(uri)
             if (NetworkManager.checkWifiStatus(view.provideContext()))
-                holder.setBookCover(getCoverImageFromRemote(item))
+                holder.setBookCover(uri, cached = false)
+            else
+                holder.setBookCover(uri, cached = true)
         }
     }
 

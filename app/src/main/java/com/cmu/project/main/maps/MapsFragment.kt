@@ -78,12 +78,8 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val location = binding.svMapSearch.query.toString()
                 context?.let { Geocoder(it) }?.getFromLocationName(location, 1)?.let { list ->
-                    if (list.isNotEmpty()) googleMap.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(
-                            LatLng(list[0].latitude, list[0].longitude),
-                            25F
-                        )
-                    )
+                    if (list.isNotEmpty())
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(list[0].latitude, list[0].longitude), 25F))
                 }
                 return false
             }

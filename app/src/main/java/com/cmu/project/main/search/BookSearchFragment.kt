@@ -12,8 +12,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmu.project.R
+import com.cmu.project.core.Collection
+import com.cmu.project.core.NetworkManager.cacheRemoteResults
+import com.cmu.project.core.NetworkManager.checkWifiStatus
+import com.cmu.project.core.database.CacheDatabase
+import com.cmu.project.core.database.entities.toBookModel
 import com.cmu.project.core.models.Book
 import com.cmu.project.databinding.FragmentBookSearchBinding
+import com.cmu.project.main.search.BookSearchFragment.HOLDER.TAG
 import com.cmu.project.main.search.book.BookSearchAdapter
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.QuerySnapshot
@@ -26,32 +32,31 @@ import kotlinx.coroutines.withContext
 
 class BookSearchFragment : Fragment(R.layout.fragment_book_search), BookSearchContract.View {
 
-    private lateinit var binding: FragmentBookSearchBinding
-    var adapter: BookSearchAdapter = BookSearchAdapter(BookSearchPresenter(this))
-    private val bookCollection = Firebase.firestore.collection("books")
+    object HOLDER {
+        const val TAG = "BookSearchFragment"
+    }
 
-    // Pagination
-    private var isScrolling = false
-    private var isMaxData = false
     private var lastBook = ""
-    private val initialItemCount = 5L
-    private val itemLoadCount = 1L
-    private var currentItems = 0
     private var totalItems = 0
+    private var currentItems = 0
+    private var isMaxData = false
+    private val itemLoadCount = 1L
+    private var isScrolling = false
     private var scrolledOutItems = 0
+    private val initialItemCount = 5L
+
+    private lateinit var binding: FragmentBookSearchBinding
+    private lateinit var database : CacheDatabase
+    private val bookCollection = Firebase.firestore.collection("books")
+    var adapter: BookSearchAdapter = BookSearchAdapter(BookSearchPresenter(this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentBookSearchBinding.bind(view)
         binding.rvBook.layoutManager = LinearLayoutManager(activity)
         binding.rvBook.adapter = adapter
-
-        //lifecycleScope.launch(Dispatchers.IO) {retrieveBooksFromCloud() }
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            getBooks()
-        }
-
+        database = CacheDatabase.getInstance(requireContext())
+        lifecycleScope.launch(Dispatchers.IO) { getBooks() }
         setSearchViewListeners()
     }
 
@@ -72,15 +77,13 @@ class BookSearchFragment : Fragment(R.layout.fragment_book_search), BookSearchCo
             totalItems = manager.itemCount
             scrolledOutItems = manager.findLastCompletelyVisibleItemPosition()
 
-            Log.i("VALUES", "Scrolling = $isScrolling | Current Items = $currentItems | Scrolled Items = $scrolledOutItems | Total Items = $totalItems")
+            Log.i(TAG, "Scrolling = $isScrolling | Current Items = $currentItems | Scrolled Items = $scrolledOutItems | Total Items = $totalItems")
 
             if (isScrolling && (scrolledOutItems) == totalItems - 1) {
-                Log.i( "FETCHING", "Getting more books...")
+                Log.i(TAG, "Getting more books...")
                 isScrolling = false
                 showProgressBar()
-                lifecycleScope.launch(Dispatchers.IO) {
-                    getBooks()
-                }
+                lifecycleScope.launch(Dispatchers.IO) { getBooks() }
             }
         }
     }
@@ -104,43 +107,58 @@ class BookSearchFragment : Fragment(R.layout.fragment_book_search), BookSearchCo
 
     @SuppressLint("SetTextI18n")
     private suspend fun getBooks() {
-        if (isMaxData) {
+        if(checkWifiStatus(requireContext())) {
+            if (isMaxData) {
+                dismissProgressBar()
+                return
+            }
+
+            val collection = adapter.getAlreadyFetchedBooks()
+            val books: QuerySnapshot = if (lastBook.isEmpty()) {
+                bookCollection
+                    .orderBy(FieldPath.documentId())
+                    .limit(initialItemCount)
+                    .get()
+                    .await()
+            } else {
+                bookCollection
+                    .orderBy(FieldPath.documentId())
+                    .startAfter(lastBook)
+                    .limit(itemLoadCount)
+                    .get()
+                    .await()
+            }
+
+            lastBook = try {
+                books.last().id
+            } catch (e: Exception) {
+                ""
+            }
+
+            Log.i(TAG, "Last Book = $lastBook | ${books.size()} < $itemLoadCount")
+            if (books.size() < itemLoadCount)
+                isMaxData = true
+
+            books.forEach { document ->
+                collection.add(
+                    document.toObject(Book::class.java).apply { id = document.id })
+            }
+            cacheRemoteResults(requireContext(), books, Collection.BOOKS)
+            withContext(Dispatchers.Main) {
+                adapter.updateList(collection)
+            }
+
             dismissProgressBar()
-            return
-        }
-
-        val collection = adapter.getAlreadyFetchedBooks()
-        val books: QuerySnapshot = if (lastBook.isEmpty()) {
-            bookCollection
-                .orderBy(FieldPath.documentId())
-                .limit(initialItemCount)
-                .get()
-                .await()
         } else {
-            bookCollection
-                .orderBy(FieldPath.documentId())
-                .startAfter(lastBook)
-                .limit(itemLoadCount)
-                .get()
-                .await()
+            val collection = adapter.getAlreadyFetchedBooks()
+            database.bookDao().getAll().forEach {
+                collection.add(it.toBookModel())
+            }
+            withContext(Dispatchers.Main) {
+                adapter.updateList(collection)
+            }
+            dismissProgressBar()
         }
-
-        lastBook = try {
-            books.last().id
-        } catch (e: Exception) {
-            ""
-        }
-
-        Log.i("BOOKS", "Last Book = $lastBook | ${books.size()} < $itemLoadCount")
-        if (books.size() < itemLoadCount)
-            isMaxData = true
-
-        books.forEach { document -> collection.add(document.toObject(Book::class.java).apply { id = document.id }) }
-        withContext(Dispatchers.Main){
-            adapter.updateList(collection)
-        }
-
-        dismissProgressBar()
 
         val results = (binding.rvBook.layoutManager as LinearLayoutManager).itemCount
         binding.numberOfResults.text = "Showing $results results"

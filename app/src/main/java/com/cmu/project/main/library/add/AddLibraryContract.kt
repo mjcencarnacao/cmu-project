@@ -14,6 +14,7 @@ import com.google.firebase.firestore.GeoPoint
 interface AddLibraryContract {
 
     interface View : BaseView<AddLibraryPresenter> {
+        fun dismiss()
         fun getLibraryImage() : Bitmap?
         fun dismissDialog(library: Library)
     }

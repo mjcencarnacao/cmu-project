@@ -10,15 +10,15 @@ interface MapsContract {
 
     interface View : BaseView<MapsPresenter> {
         fun startStartupActivity()
-        fun provideContext() : Context
+        fun provideContext(): Context
         fun setupListeners(googleMap: GoogleMap)
         fun setupLibraryMarkers(googleMap: GoogleMap, refresh: Boolean = false)
         fun setupMarker(googleMap: GoogleMap, library: Library, isFavourite: Boolean)
     }
 
     interface Presenter : BasePresenter {
-        suspend fun isFavouriteLibrary(library: Library) : Boolean
         fun cacheAddedLibrary(library: Library?)
+        suspend fun isFavouriteLibrary(library: Library): Boolean
         suspend fun retrieveLibrariesFromCloud(refresh: Boolean = false): List<Library>
     }
 

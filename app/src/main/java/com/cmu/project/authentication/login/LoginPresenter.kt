@@ -21,8 +21,6 @@ class LoginPresenter(private val view: LoginContract.View) : LoginContract.Prese
         const val TAG = "LoginPresenter"
     }
 
-    private val database = CacheDatabase.getInstance(view.provideContext())
-
     override fun isUserAuthenticated(): Boolean {
         return FirebaseAuth.getInstance().currentUser != null
     }
@@ -30,8 +28,6 @@ class LoginPresenter(private val view: LoginContract.View) : LoginContract.Prese
     override suspend fun signInWithEmailAndPassword(email: String, password: String) {
         try {
             val ref = FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
-            database.userDao().delete()
-            database.userDao().insert(UserEntity(id = ref.user!!.uid, retrieveUserFromRemoteCollection(ref.user!!.uid), email, md5(password), EMPTY_STRING, EMPTY_STRING))
             view.startMainActivity()
             Log.i(TAG, "Logged user successfully.")
         } catch (e: Exception) {

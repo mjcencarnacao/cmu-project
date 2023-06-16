@@ -28,7 +28,7 @@ object NetworkManager {
         return result.also { querySnapshot -> cacheRemoteResults(context, querySnapshot, collection) }
     }
 
-    private fun cacheRemoteResults(context: Context, querySnapshot: QuerySnapshot, collection: Collection) {
+    fun cacheRemoteResults(context: Context, querySnapshot: QuerySnapshot, collection: Collection) {
         val database = CacheDatabase.getInstance(context)
         database.libraryDao().deleteAll()
         querySnapshot.forEach { snapshot ->

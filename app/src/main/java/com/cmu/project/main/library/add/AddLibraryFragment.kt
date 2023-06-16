@@ -1,9 +1,6 @@
 package com.cmu.project.main.library.add
 
-import android.app.Activity
 import android.app.Activity.RESULT_OK
-import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -13,8 +10,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,26 +20,20 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.cmu.project.R
 import com.cmu.project.core.models.Library
 import com.cmu.project.databinding.FragmentAddLibraryBinding
-import com.cmu.project.main.maps.MapsFragmentDirections
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.firestore.GeoPoint
 import com.google.gson.Gson
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.launch
 import java.io.File
-
 
 class AddLibraryFragment : BottomSheetDialogFragment(R.layout.fragment_add_library), AddLibraryContract.View {
 
     private var libraryImage: Bitmap? = null
+    private lateinit var currentPhotoPath: String
     override lateinit var presenter: AddLibraryPresenter
     private val args: AddLibraryFragmentArgs by navArgs()
     private lateinit var binding: FragmentAddLibraryBinding
-
-    private lateinit var currentPhotoPath: String
 
     @Deprecated("Deprecated")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
