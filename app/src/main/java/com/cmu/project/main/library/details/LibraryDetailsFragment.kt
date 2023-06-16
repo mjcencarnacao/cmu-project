@@ -40,7 +40,6 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -53,6 +52,7 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
 
     private var justCreated = true
     private var wasLoaded = false
+    private var flagged = false
     override lateinit var presenter: LibraryDetailsPresenter
     private val args: LibraryDetailsFragmentArgs by navArgs()
     private lateinit var binding: FragmentLibraryDetailsBinding
@@ -79,8 +79,24 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
         setLibraryName(library.name)
         setLocationInfo(library.location)
         setLibraryImage()
+        changeFlagImage(library)
         changeFavouriteButton(args.favourite)
         CoroutineScope(Dispatchers.Main).launch { binding.ratingBar.rating = presenter.getRating() }
+    }
+
+    private fun changeFlagImage(library: Library) {
+        CoroutineScope(Dispatchers.IO).launch {
+            flagged = presenter.wasFlaggedByUser(library)
+            if (flagged)
+                withContext(Dispatchers.Main) {
+                    binding.imageView.setImageResource(R.drawable.ic_flag_filled)
+                }
+            else
+                withContext(Dispatchers.Main) {
+                    binding.imageView.setImageResource(R.drawable.ic_flag)
+
+                }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -156,8 +172,22 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
         val location = Gson().fromJson(args.library, Library::class.java)
         googleMap.uiSettings.isScrollGesturesEnabled = false
         if (location != null) {
-            googleMap.addMarker(MarkerOptions().position(LatLng(location.location.latitude, location.location.longitude)))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.location.latitude, location.location.longitude), 15F))
+            googleMap.addMarker(
+                MarkerOptions().position(
+                    LatLng(
+                        location.location.latitude,
+                        location.location.longitude
+                    )
+                )
+            )
+            googleMap.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(
+                        location.location.latitude,
+                        location.location.longitude
+                    ), 15F
+                )
+            )
         }
     }
 
@@ -174,8 +204,15 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
 
         binding.imageView.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
-                presenter.flagLibrary(library)
-                binding.imageView.setImageResource(R.drawable.ic_flag_filled)
+                if (!flagged) {
+                    flagged = true
+                    presenter.flagLibrary(library, false)
+                    binding.imageView.setImageResource(R.drawable.ic_flag_filled)
+                } else {
+                    flagged = false
+                    presenter.flagLibrary(library, true)
+                    binding.imageView.setImageResource(R.drawable.ic_flag)
+                }
             }
         }
 

@@ -23,8 +23,9 @@ interface LibraryDetailsContract {
     }
 
     interface Presenter : BasePresenter {
-        suspend fun flagLibrary(library: Library)
+        suspend fun flagLibrary(library: Library, remove: Boolean)
         suspend fun getRating() : Float
+        suspend fun wasFlaggedByUser(library: Library) : Boolean
         suspend fun sendRating(float: Float)
         suspend fun getLibraryImage(library: Library) : Uri?
         fun removeBookFromLibrary(id: String)

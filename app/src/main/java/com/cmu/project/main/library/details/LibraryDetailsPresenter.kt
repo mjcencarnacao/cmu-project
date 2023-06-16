@@ -55,10 +55,23 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
         return 0f
     }
 
-    override suspend fun flagLibrary(library: Library) {
+    override suspend fun wasFlaggedByUser(library: Library): Boolean {
         val libs = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
-        libs?.reference!!.update("flags", FieldValue.arrayUnion(FirebaseAuth.getInstance().currentUser?.uid ?: "")).await()
-        if((libs.reference.get().await().get("flags") as List<String>).size == 2)
+        if (libs?.reference?.get()?.await()?.get("flags") != null) {
+            val flags = libs?.reference?.get()?.await()?.get("flags") as List<String>
+            if (flags.any { it == (FirebaseAuth.getInstance().currentUser?.uid ?: "") })
+                return true
+        }
+        return false
+    }
+
+    override suspend fun flagLibrary(library: Library, remove: Boolean) {
+        val libs = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
+        if (remove)
+            libs?.reference!!.update("flags", FieldValue.arrayRemove(FirebaseAuth.getInstance().currentUser?.uid ?: "")).await()
+        else
+            libs?.reference!!.update("flags", FieldValue.arrayUnion(FirebaseAuth.getInstance().currentUser?.uid ?: "")).await()
+        if ((libs.reference.get().await().get("flags") as List<String>).size == 2)
             libs.reference.delete().await()
     }
 
