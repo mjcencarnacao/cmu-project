@@ -62,8 +62,7 @@ class AddBookPresenter(private val view: AddBookContract.View) : AddBookContract
                             BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream())
                         storage.child("books/" + ref.id).putBytes(convertBitmapToByteArray(image))
                             .await()
-                    } else
-                        view.alertISBNFailure()
+                    }
                 }
             } else
                 addBookToLibrary(collectionFiltered.first().reference)

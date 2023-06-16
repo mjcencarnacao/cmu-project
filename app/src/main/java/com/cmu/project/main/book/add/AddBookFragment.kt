@@ -45,10 +45,6 @@ class AddBookFragment : DialogFragment(R.layout.fragment_add_book), AddBookContr
         }
     }
 
-    override fun alertISBNFailure() {
-        Toast.makeText(requireContext(), "There was a problem checking the ISBN. Register in another way.", Toast.LENGTH_LONG).show()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
