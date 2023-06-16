@@ -203,7 +203,6 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
         if (nearbyLibraries.isNotEmpty()) {
             val nearestLibrary = nearbyLibraries.toSortedMap().entries.first().value
             if (lastMarkerOpened != nearestLibrary.second) {
-                Log.i("TESTE", "DEU")
                 nearestLibrary.second.tag.let {
                     val library = nearestLibrary.first
                     val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(library = Gson().toJson(library), coordinates = null)
@@ -215,7 +214,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
     }
 
     private fun getDirections(googleMap: GoogleMap, sourceLat: Double, sourceLng: Double, destLat: Double, destLng: Double) {
-        val api = System.getProperty("O")
+        val api = "5b3ce3597851110001cf62487fd1c381cad8424ebca7d8629b30f88e"
         val url = "https://api.openrouteservice.org/v2/directions/driving-car?api_key=$api&start=$sourceLng,$sourceLat&end=$destLng,$destLat"
 
         val req = Request.Builder()
