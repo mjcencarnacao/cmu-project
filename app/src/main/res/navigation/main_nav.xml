@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/mapsFragment">
+
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.cmu.project.main.maps.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps">
+        <argument
+            android:name="library"
+            android:defaultValue="null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_mapsFragment_to_bookSearchFragment"
+            app:destination="@id/bookSearchFragment" />
+        <action
+            android:id="@+id/action_mapsFragment_to_libraryDetailsFragment"
+            app:destination="@id/libraryDetailsFragment" />
+        <action
+            android:id="@+id/action_mapsFragment_to_addLibraryFragment"
+            app:destination="@id/addLibraryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookSearchFragment"
+        android:name="com.cmu.project.main.search.BookSearchFragment"
+        android:label="fragment_book_search"
+        tools:layout="@layout/fragment_book_search">
+        <action
+            android:id="@+id/action_bookSearchFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookDetailsFragment"
+        android:name="com.cmu.project.main.book.details.BookDetailsFragment"
+        android:label="fragment_book_detail"
+        tools:layout="@layout/fragment_book_details">
+        <argument
+            android:name="book"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_bookDetailsFragment_to_libraryDetailsFragment"
+            app:destination="@id/libraryDetailsFragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/libraryDetailsFragment"
+        android:name="com.cmu.project.main.library.details.LibraryDetailsFragment"
+        android:label="LibraryDetailsFragment">
+        <argument
+            android:name="library"
+            app:argType="string" />
+        <argument
+            android:name="coordinates"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="favourite"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_customDialogFragment_to_bookDetailsFragment2"
+            app:destination="@id/bookDetailsFragment"
+            app:launchSingleTop="false" />
+        <action
+            android:id="@+id/action_libraryDetailsFragment_to_addBookFragment"
+            app:destination="@id/addBookFragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/addLibraryFragment"
+        android:name="com.cmu.project.main.library.add.AddLibraryFragment"
+        android:label="AddLibraryFragment">
+        <argument
+            android:name="library"
+            app:argType="string" />
+        <argument
+            android:name="coordinates"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_addLibraryFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/addBookFragment"
+        android:name="com.cmu.project.main.book.add.AddBookFragment"
+        android:label="AddBookFragment">
+        <argument
+            android:name="library"
+            app:argType="string" />
+        <argument
+            android:name="coordinates"
+            app:argType="string"
+            app:nullable="true" />
+    </dialog>
+
+</navigation>

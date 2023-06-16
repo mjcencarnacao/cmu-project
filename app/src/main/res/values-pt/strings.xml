@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LibrarIST</string>
+    <string name="sign_in">Entrar</string>
+    <string name="sign_up">Registrar</string>
+    <string name="forgot_password">Esqueceu a senha</string>
+    <string name="welcome_back">Bem-vindo\nde volta</string>
+    <string name="email">E-mail</string>
+    <string name="password">Senha</string>
+    <string name="todo">A fazer</string>
+    <string name="confirm_password">Confirmar senha</string>
+    <string name="name">Nome</string>
+    <string name="lets_get_started">Vamos começar\nagora</string>
+    <string name="add_library">Adicionar biblioteca</string>
+    <string name="library_name">Nome da biblioteca</string>
+    <string name="library_title">Título da biblioteca</string>
+    <string name="search_books">Procurar livros</string>
+    <string name="share">Compartilhar</string>
+    <string name="logout">Sair</string>
+    <string name="account">Conta</string>
+    <string name="communication">Comunicação</string>
+    <string name="books_available">Livros disponíveis</string>
+    <string name="library_dialog_description">Para adicionar ou remover um livro da biblioteca, basta usar os botões acima. As bibliotecas podem ser adicionadas aos favoritos do usuário. Abaixo, há uma lista dos livros disponíveis.</string>
+    <string name="score">pontuação</string>
+    <string name="book_name">Nome do livro</string>
+    <string name="add_book">Adicionar livro</string>
+</resources>

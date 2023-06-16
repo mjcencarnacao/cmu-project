@@ -1,0 +1,10 @@
+<resources>
+    <dimen name="small_margin">20dp</dimen>
+    <dimen name="medium_margin">40dp</dimen>
+    <dimen name="large_margin">60dp</dimen>
+
+
+    <dimen name="small_text">20sp</dimen>
+    <dimen name="large_text">40sp</dimen>
+    <dimen name="button_medium">100dp</dimen>
+</resources>

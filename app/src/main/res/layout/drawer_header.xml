@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@color/yellow_icon"
+    android:gravity="bottom"
+    android:padding="20dp">
+
+    <ImageView
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:contentDescription="@string/todo"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/userNameText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="8dp"
+        android:textStyle="bold"
+        android:fontFamily="@font/poppins_regular"
+        android:layout_weight="1"
+        android:maxWidth="200dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="Hi Francisco!" />
+
+</LinearLayout>
