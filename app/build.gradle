@@ -110,6 +110,12 @@ dependencies {
     implementation "androidx.room:room-ktx:2.5.1"
     kapt "androidx.room:room-compiler:2.5.1"
 
+    /**
+     * OkHttp
+     * https://square.github.io/okhttp/
+     */
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
+
 }
 
 kapt {

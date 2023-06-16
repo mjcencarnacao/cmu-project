@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap.createScaledBitmap
 import android.graphics.BitmapFactory.decodeResource
+import android.graphics.Color
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -32,12 +34,16 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions.loadRawResourceStyle
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 
 class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, NavigationView.OnNavigationItemSelectedListener {
 
@@ -47,6 +53,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
     private lateinit var binding: FragmentMapsBinding
     private var currentUser = FirebaseAuth.getInstance().currentUser
     private val renderedLibraries: MutableMap<Library, Marker> = HashMap()
+    private lateinit var userLocation: Location
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -101,6 +108,13 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
                         val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(library = lib, coordinates = Gson().toJson(marker.position), favourite = isFavourite)
                         findNavController().navigate(action)
                     }
+                    getDirections(
+                        googleMap,
+                        userLocation!!.latitude,
+                        userLocation!!.longitude,
+                        (data as Library).location.latitude,
+                        data.location.longitude
+                    )
                 }
             }
             true
@@ -108,7 +122,10 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
 
         binding.navView.setNavigationItemSelectedListener(this)
 
-        googleMap.setOnMyLocationChangeListener { handleNearbyLibraries(it) }
+        googleMap.setOnMyLocationChangeListener {
+            userLocation = it
+            handleNearbyLibraries(it)
+        }
 
         binding.btnMenu.setOnClickListener { binding.drawerLayout.openDrawer(Gravity.LEFT) }
 
@@ -191,6 +208,78 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, Naviga
                 lastMarkerOpened = nearestLibrary.second
             }
         }
+    }
+
+    private fun getDirections(googleMap: GoogleMap, sourceLat: Double, sourceLng: Double, destLat: Double, destLng: Double) {
+        val api = "5b3ce3597851110001cf62487fd1c381cad8424ebca7d8629b30f88e"
+        val url = "https://api.openrouteservice.org/v2/directions/driving-car?api_key=$api&start=$sourceLng,$sourceLat&end=$destLng,$destLat"
+
+        val req = Request.Builder()
+            .url(url)
+            .build()
+
+        val client = OkHttpClient()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val response = client.newCall(req).execute()
+                val responseBody = response.body?.string()
+
+                if (response.isSuccessful && responseBody != null) {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        drawPolylineOnMap(googleMap, responseBody)
+                    }
+                }
+
+            } catch (e: Exception) {
+                Log.i("ERROR", "Request Failed")
+            }
+        }
+    }
+
+    private fun drawPolylineOnMap(googleMap: GoogleMap, directions: String) {
+        val latLngList = parseGeoJsonToLatLngList(directions)
+        val polylineOptions = PolylineOptions()
+            .addAll(latLngList)
+            .color(Color.YELLOW)
+            .width(16f)
+
+        val polyline = googleMap.addPolyline(polylineOptions)
+
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngList[0], 15f), 2000, null)
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                Thread.sleep(10000)
+            }
+            polyline.remove()
+        }
+    }
+
+    private fun parseGeoJsonToLatLngList(geoJsonString: String): List<LatLng> {
+        val latLngList = mutableListOf<LatLng>()
+        val json = JSONObject(geoJsonString)
+        val features = json.getJSONArray("features")
+
+        for (i in 0 until features.length()) {
+            val feature = features.getJSONObject(i)
+            val geometry = feature.getJSONObject("geometry")
+            val type = geometry.getString("type")
+
+            if (type == "LineString") {
+                val coordinates = geometry.getJSONArray("coordinates")
+
+                for (j in 0 until coordinates.length()) {
+                    val coordinate = coordinates.getJSONArray(j)
+                    val lng = coordinate.getDouble(0)
+                    val lat = coordinate.getDouble(1)
+
+                    val latLng = LatLng(lat, lng)
+                    latLngList.add(latLng)
+                }
+            }
+        }
+        return latLngList
     }
 
 }
