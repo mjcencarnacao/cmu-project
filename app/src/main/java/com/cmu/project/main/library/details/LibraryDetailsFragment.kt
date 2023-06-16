@@ -6,16 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.location.Geocoder
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.transition.TransitionManager
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ImageView
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -54,11 +50,13 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
 
     private lateinit var currentPhotoPath: String
 
+    private var justCreated = true
     private var wasLoaded = false
     override lateinit var presenter: LibraryDetailsPresenter
     private val args: LibraryDetailsFragmentArgs by navArgs()
     private lateinit var binding: FragmentLibraryDetailsBinding
-    private var adapter: LibraryDetailsAdapter = LibraryDetailsAdapter(LibraryDetailsPresenter(this))
+    private var adapter: LibraryDetailsAdapter =
+        LibraryDetailsAdapter(LibraryDetailsPresenter(this))
     private lateinit var behavior: BottomSheetBehavior<FrameLayout>
     private lateinit var library: Library
 
@@ -81,7 +79,7 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
         setLocationInfo(library.location)
         setLibraryImage()
         changeFavouriteButton(args.favourite)
-        binding.ratingBar.rating = library.rating
+        CoroutineScope(Dispatchers.Main).launch { binding.ratingBar.rating = presenter.getRating() }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -164,7 +162,11 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
     }
 
     private fun setOnClickListeners() {
-        binding.ratingBar.setOnRatingBarChangeListener { _, rating, _ -> setRating(rating) }
+        binding.ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
+            if (!justCreated)
+                setRating(rating)
+            justCreated = false
+        }
 
         binding.btnRemoveBook.setOnClickListener { generateCameraIntent() }
 
@@ -183,7 +185,7 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
         }
 
         binding.imageView2.setOnClickListener {
-            if(!wasLoaded) {
+            if (!wasLoaded) {
                 wasLoaded = true
                 setLibraryImage(force = true)
             }
@@ -193,7 +195,8 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
     override fun setLibraryImage(force: Boolean) {
         if (checkWifiStatus(requireContext()) || force)
             CoroutineScope(Dispatchers.IO).launch {
-                val uri = presenter.getLibraryImage(Gson().fromJson(args.library, Library::class.java))
+                val uri =
+                    presenter.getLibraryImage(Gson().fromJson(args.library, Library::class.java))
                 withContext(Dispatchers.Main) {
                     Glide.with(requireContext()).load(uri)
                         .transform(CenterCrop(), RoundedCorners(25))

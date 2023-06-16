@@ -23,7 +23,7 @@ interface LibraryDetailsContract {
     }
 
     interface Presenter : BasePresenter {
-        fun getRating() : Float
+        suspend fun getRating() : Float
         suspend fun sendRating(float: Float)
         suspend fun getLibraryImage(library: Library) : Uri?
         fun removeBookFromLibrary(id: String)

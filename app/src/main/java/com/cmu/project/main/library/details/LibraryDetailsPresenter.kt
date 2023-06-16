@@ -8,6 +8,7 @@ import com.cmu.project.core.NetworkManager
 import com.cmu.project.core.models.Book
 import com.cmu.project.core.models.Library
 import com.cmu.project.main.library.details.libraries.LibraryDetailsViewHolder
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
@@ -29,16 +30,22 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
     private val libraryCollection = Firebase.firestore.collection("libraries")
 
     override suspend fun sendRating(float: Float) {
-        val snapshot =
-            libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
-        val rating = snapshot?.reference?.get()?.await()?.toObject(Library::class.java)?.rating
-        if (rating != null) {
-            snapshot.reference.update("rating", ((rating + float) / 2)).await()
+        val snapshot = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
+        FirebaseAuth.getInstance().currentUser?.let {
+            val reviews = snapshot?.reference!!.get().await().get("reviews") as HashMap<String, Float>
+            reviews[it.uid] = float
+            snapshot?.reference!!.update("reviews", reviews)
         }
     }
 
-    override fun getRating(): Float {
-        return 0f
+    override suspend fun getRating(): Float {
+        var totalRating = 0
+        var reviewCount = 0
+        val snapshot = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
+        val reviews = snapshot?.reference!!.get().await().get("reviews") as HashMap<String, Int>
+        reviewCount = reviews.values.size
+        reviews.forEach { (t, u) -> totalRating += u }
+        return (totalRating / reviewCount).toFloat()
     }
 
     override suspend fun getLibraryImage(library: Library): Uri? {
