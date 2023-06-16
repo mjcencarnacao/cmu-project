@@ -1,16 +1,10 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
-
-
     <dimen name="small_margin">20dp</dimen>
     <dimen name="medium_margin">40dp</dimen>
     <dimen name="large_margin">60dp</dimen>
 
 
     <dimen name="small_text">20sp</dimen>
-    <dimen name="medium_text">30sp</dimen>
     <dimen name="large_text">40sp</dimen>
     <dimen name="button_medium">100dp</dimen>
-    <dimen name="progress_bar_dimensions">80dp</dimen>
-    <dimen name="custom_dialog_padding">50dp</dimen>
 </resources>

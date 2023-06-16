@@ -1,10 +1,25 @@
 package com.cmu.project.core.models
 
-import com.cmu.project.core.Constants.EMPTY_STRING
+import com.cmu.project.core.database.entities.UserEntity
+import com.google.firebase.firestore.DocumentReference
+import com.google.gson.Gson
 
 data class User(
-    var email: String = EMPTY_STRING,
-    var name: String = EMPTY_STRING,
-    var password: String = EMPTY_STRING,
-    var favourites: MutableMap<Library, Float> = mutableMapOf()
+    val id: String,
+    val name: String,
+    val email: String,
+    val password: String,
+    val favourites: List<DocumentReference>,
+    val notifications: List<DocumentReference>
 )
+
+fun User.toUserEntity(): UserEntity {
+    return UserEntity(
+        id = id,
+        name = name,
+        email = email,
+        password = password,
+        favourites = Gson().toJson(favourites),
+        notifications = Gson().toJson(notifications)
+    )
+}
