@@ -14,7 +14,6 @@ import com.google.firebase.firestore.GeoPoint
 interface LibraryDetailsContract {
 
     interface View : BaseView<LibraryDetailsPresenter> {
-        fun provideContext() : Context
         fun setLibraryImage(force: Boolean = false)
         fun getLibraryName() : String
         fun setLibraryName(name: String)
@@ -23,6 +22,7 @@ interface LibraryDetailsContract {
     }
 
     interface Presenter : BasePresenter {
+        suspend fun flagLibrary(library: Library)
         suspend fun getRating() : Float
         suspend fun sendRating(float: Float)
         suspend fun getLibraryImage(library: Library) : Uri?

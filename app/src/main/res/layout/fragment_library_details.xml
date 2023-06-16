@@ -68,7 +68,9 @@
             android:id="@+id/tvLibraryName"
             style="@style/DialogText"
             android:fontFamily="@font/poppins_regular"
+            android:maxLength="20"
             android:text="@string/library_title"
+            android:ellipsize="end"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -160,7 +162,7 @@
                 android:layout_marginEnd="60dp"
                 android:background="@drawable/ic_circle_filled"
                 android:contentDescription="@string/todo"
-                android:src="@drawable/ic_location"
+                android:src="@drawable/ic_flag"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

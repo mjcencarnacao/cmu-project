@@ -40,6 +40,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -128,7 +129,6 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
             library = args.library,
             coordinates = args.coordinates
         )
-
         findNavController().navigate(action)
     }
 
@@ -171,6 +171,13 @@ class LibraryDetailsFragment : BottomSheetDialogFragment(R.layout.fragment_libra
         binding.btnRemoveBook.setOnClickListener { generateCameraIntent() }
 
         binding.btnAddBook.setOnClickListener { navigateToAddFragment() }
+
+        binding.imageView.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                presenter.flagLibrary(library)
+                binding.imageView.setImageResource(R.drawable.ic_flag_filled)
+            }
+        }
 
         binding.btnLibraryFavourite.setOnClickListener {
             val user = FirebaseAuth.getInstance().currentUser

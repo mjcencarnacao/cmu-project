@@ -16,9 +16,10 @@ import java.lang.Exception
 
 class BookSearchPresenter(private val view : BookSearchContract.View) : BookSearchContract {
 
-    private var storage = FirebaseStorage.getInstance().reference
+
     private var bookList = mutableListOf<Book>()
     private var fullBookList = mutableListOf<Book>()
+    private var storage = FirebaseStorage.getInstance().reference
 
     fun getBookCount() = bookList.size
 
@@ -39,11 +40,10 @@ class BookSearchPresenter(private val view : BookSearchContract.View) : BookSear
     }
 
     private suspend fun getCoverImageFromRemote(book: Book): Uri? {
-        try {
-            return storage.child("books/" + book.id.trim()).downloadUrl.await()
-        }
-        catch (e: Exception) {
-            return null
+        return try {
+            storage.child("books/" + book.id.trim()).downloadUrl.await()
+        } catch (e: Exception) {
+            null
         }
     }
 

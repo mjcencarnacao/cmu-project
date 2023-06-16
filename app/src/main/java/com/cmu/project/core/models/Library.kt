@@ -10,7 +10,8 @@ data class Library(
     var name: String = EMPTY_STRING,
     var location: GeoPoint = GeoPoint(0.0, 0.0),
     var rating: Float = 0.0F,
-    var reviews: MutableMap<String, Float> = mutableMapOf()
+    var reviews: MutableMap<String, Float> = mutableMapOf(),
+    var flags : List<String> = mutableListOf()
 )
 
 fun Library.toLibraryEntity(): LibraryEntity {

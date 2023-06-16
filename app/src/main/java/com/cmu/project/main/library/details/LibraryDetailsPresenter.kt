@@ -55,6 +55,13 @@ class LibraryDetailsPresenter(private val view: LibraryDetailsContract.View) :
         return 0f
     }
 
+    override suspend fun flagLibrary(library: Library) {
+        val libs = libraryCollection.get().await().find { it.getString("name") == view.getLibraryName() }
+        libs?.reference!!.update("flags", FieldValue.arrayUnion(FirebaseAuth.getInstance().currentUser?.uid ?: "")).await()
+        if((libs.reference.get().await().get("flags") as List<String>).size == 2)
+            libs.reference.delete().await()
+    }
+
     override suspend fun getLibraryImage(library: Library): Uri? {
         return storage.child("libraries/" + library.id.trim()).downloadUrl.await()
     }
