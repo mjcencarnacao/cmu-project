@@ -17,6 +17,7 @@ interface LibraryDetailsContract {
         fun setLibraryImage(force: Boolean = false)
         fun getLibraryName() : String
         fun setLibraryName(name: String)
+        fun provideContext(): Context
         fun goToBookDetails(bundle: Bundle)
         fun changeFavouriteButton(isFav: Boolean)
     }
