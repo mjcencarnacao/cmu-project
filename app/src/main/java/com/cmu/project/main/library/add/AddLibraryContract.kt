@@ -1,5 +1,6 @@
 package com.cmu.project.main.library.add
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.widget.ImageView
@@ -14,10 +15,11 @@ interface AddLibraryContract {
 
     interface View : BaseView<AddLibraryPresenter> {
         fun getLibraryImage() : Bitmap?
+        fun dismissDialog(library: Library)
     }
 
     interface Presenter : BasePresenter {
-        fun addLibraryToRemoteCollection(name: String, geoPoint: GeoPoint)
+        fun addLibraryToRemoteCollection(library: Library)
     }
 
 }

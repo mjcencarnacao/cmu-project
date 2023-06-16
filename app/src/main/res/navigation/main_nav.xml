@@ -9,6 +9,11 @@
         android:name="com.cmu.project.main.maps.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps">
+        <argument
+            android:name="library"
+            android:defaultValue="null"
+            app:argType="string"
+            app:nullable="true" />
         <action
             android:id="@+id/action_mapsFragment_to_bookSearchFragment"
             app:destination="@id/bookSearchFragment" />
@@ -56,8 +61,8 @@
             app:nullable="true" />
         <argument
             android:name="favourite"
-            app:argType="boolean"
-            android:defaultValue="false"/>
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/action_customDialogFragment_to_bookDetailsFragment2"
             app:destination="@id/bookDetailsFragment"
@@ -78,6 +83,9 @@
             android:name="coordinates"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_addLibraryFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
     </dialog>
 
     <dialog

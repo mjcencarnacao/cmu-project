@@ -3,6 +3,7 @@ package com.cmu.project.main.library.add
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -15,12 +16,16 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.cmu.project.R
+import com.cmu.project.core.models.Library
 import com.cmu.project.databinding.FragmentAddLibraryBinding
+import com.cmu.project.main.maps.MapsFragmentDirections
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -28,6 +33,7 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.gson.Gson
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.launch
 import java.io.File
 
 
@@ -88,17 +94,24 @@ class AddLibraryFragment : BottomSheetDialogFragment(R.layout.fragment_add_libra
         return libraryImage
     }
 
+    override fun dismissDialog(library: Library) {
+        lifecycleScope.launch {
+            val libraryString = Gson().toJson(library)
+            val action = AddLibraryFragmentDirections.actionAddLibraryFragmentToMapsFragment(library = libraryString)
+            findNavController().navigate(action)
+        }
+    }
+
     private fun addLibraryInfo() {
         val location = Gson().fromJson(args.coordinates, LatLng::class.java)
         val geoPoint = GeoPoint(location.latitude, location.longitude)
 
         if (binding.tvLibraryName.text.isNotBlank() && libraryImage != null) {
-            presenter.addLibraryToRemoteCollection(binding.tvLibraryName.text.toString(), geoPoint)
+            val library = Library(name = binding.tvLibraryName.text.toString(), location = geoPoint)
+            presenter.addLibraryToRemoteCollection(library)
             Toast.makeText(context, "New Library Added.", Toast.LENGTH_LONG).show()
         } else
             Toast.makeText(context, "Some Library information is Missing!", Toast.LENGTH_LONG).show()
-
-        dismiss()
     }
 
     private fun rotateImage(bitmap: Bitmap): Bitmap {

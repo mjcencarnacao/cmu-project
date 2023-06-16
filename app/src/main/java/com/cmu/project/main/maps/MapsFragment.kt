@@ -3,13 +3,11 @@ package com.cmu.project.main.maps
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Bitmap.createScaledBitmap
 import android.graphics.BitmapFactory.decodeResource
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -19,6 +17,7 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.cmu.project.R
 import com.cmu.project.core.activities.StartupActivity
 import com.cmu.project.core.models.Library
@@ -35,24 +34,19 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
-    NavigationView.OnNavigationItemSelectedListener {
+class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View, NavigationView.OnNavigationItemSelectedListener {
 
-    override lateinit var presenter: MapsPresenter
-    private lateinit var binding: FragmentMapsBinding
-    private val renderedLibraries: MutableMap<Library, Marker> = HashMap()
     private var lastMarkerOpened: Marker? = null
+    override lateinit var presenter: MapsPresenter
+    private val args: MapsFragmentArgs by navArgs()
+    private lateinit var binding: FragmentMapsBinding
     private var currentUser = FirebaseAuth.getInstance().currentUser
-    private var userLocation: Location? = null
+    private val renderedLibraries: MutableMap<Library, Marker> = HashMap()
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,11 +68,8 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
         googleMap.isMyLocationEnabled = true
         googleMap.setMapStyle(context?.let { loadRawResourceStyle(it, R.raw.style) })
         setupListeners(googleMap)
+        presenter.cacheAddedLibrary(Gson().fromJson(args.library, Library::class.java))
         setupLibraryMarkers(googleMap)
-    }
-
-    override fun provideContext(): Context {
-        return requireContext()
     }
 
     @Suppress("DEPRECATION")
@@ -101,63 +92,27 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
         })
 
         googleMap.setOnMapClickListener { position ->
-            val action = MapsFragmentDirections.actionMapsFragmentToAddLibraryFragment(
-                library = "",
-                coordinates = Gson().toJson(position)
-            )
+            val action = MapsFragmentDirections.actionMapsFragmentToAddLibraryFragment(library = "", coordinates = Gson().toJson(position))
             findNavController().navigate(action)
         }
 
         googleMap.setOnMarkerClickListener { marker ->
             marker.tag?.let { data ->
                 val lib = Gson().toJson(data)
-                var isFavourite = false
-                lifecycleScope.launch(Dispatchers.Main) {
-                    isFavourite = isFavouriteLibrary(Gson().fromJson(lib, Library::class.java))
-                    val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(
-                        library = lib,
-                        coordinates = Gson().toJson(marker.position),
-                        favourite = isFavourite
-                    )
-                    findNavController().navigate(action)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val isFavourite = presenter.isFavouriteLibrary(Gson().fromJson(lib, Library::class.java))
+                    withContext(Dispatchers.Main){
+                        val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(library = lib, coordinates = Gson().toJson(marker.position), favourite = isFavourite)
+                        findNavController().navigate(action)
+                    }
                 }
             }
             true
         }
 
-        googleMap.setOnMyLocationChangeListener {
-            val nearbyLibs = HashMap<Float, Pair<Library, Marker>>()
-
-            for ((lib, marker) in renderedLibraries) {
-                val libLoc = Location("")
-                libLoc.longitude = lib.location.longitude
-                libLoc.latitude = lib.location.latitude
-
-                val distance = it.distanceTo(libLoc)
-                if (distance <= 100)
-                    nearbyLibs[distance] = Pair(lib, marker)
-            }
-
-            if (nearbyLibs.isEmpty())
-                return@setOnMyLocationChangeListener
-
-            val nearestLib = nearbyLibs.toSortedMap().entries.first().value
-            if (lastMarkerOpened != nearestLib.second) {
-                nearestLib.second.tag.let {
-                    val library = nearestLib.first
-                    val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(
-                        library = Gson().toJson(library),
-                        coordinates = null
-                    )
-                    findNavController().navigate(action)
-                }
-                lastMarkerOpened = nearestLib.second
-            }
-
-            userLocation = it
-        }
-
         binding.navView.setNavigationItemSelectedListener(this)
+
+        googleMap.setOnMyLocationChangeListener { handleNearbyLibraries(it) }
 
         binding.btnMenu.setOnClickListener { binding.drawerLayout.openDrawer(Gravity.LEFT) }
 
@@ -170,7 +125,6 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
             R.id.navSearch -> findNavController().navigate(R.id.action_mapsFragment_to_bookSearchFragment)
             R.id.navLogout -> signOut()
             R.id.navRate -> shareToSocialMedia()
-
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
@@ -181,83 +135,65 @@ class MapsFragment : Fragment(R.layout.fragment_maps), MapsContract.View,
         startStartupActivity()
     }
 
-    private fun shareToSocialMedia() {
-        val intent = Intent()
-        intent.action = Intent.ACTION_SEND
-        intent.putExtra(
-            Intent.EXTRA_TEXT,
-            "Share and manage libraries effortlessly with LibrarIST."
-        )
-        intent.type = "text/plain"
-        startActivity(Intent.createChooser(intent, "Share"))
-    }
-
     override fun startStartupActivity() {
         startActivity(Intent(context, StartupActivity::class.java)).also { activity?.finish() }
     }
 
-    @SuppressLint("MissingPermission")
+    override fun provideContext(): Context {
+        return requireContext()
+    }
+
+    private fun shareToSocialMedia() {
+        val intent = Intent()
+        intent.action = Intent.ACTION_SEND
+        intent.putExtra(Intent.EXTRA_TEXT, "Share and manage libraries effortlessly with LibrarIST.")
+        intent.type = "text/plain"
+        startActivity(Intent.createChooser(intent, "Share"))
+    }
+
     override fun setupLibraryMarkers(googleMap: GoogleMap, refresh: Boolean) {
         googleMap.clear()
         lifecycleScope.launch(Dispatchers.IO) {
             presenter.retrieveLibrariesFromCloud(refresh).forEach { library ->
-                val position = LatLng(library.location.latitude, library.location.longitude)
                 withContext(Dispatchers.Main) {
-                    val marker =
-                        googleMap.addMarker(MarkerOptions().position(position).title(library.name))
-                    marker?.tag = library
-
-                    val icon: Bitmap
-
-                    if (isFavouriteLibrary(library)) {
-                        icon = createScaledBitmap(
-                            decodeResource(
-                                requireContext().resources,
-                                R.drawable.iv_search_fav
-                            ), 80, 80, false
-                        )
-                    } else {
-                        icon = createScaledBitmap(
-                            decodeResource(
-                                requireContext().resources,
-                                R.drawable.iv_search
-                            ), 80, 80, false
-                        )
-                    }
-
-                    marker?.setIcon(fromBitmap(icon))
-                    if (marker != null)
-                        renderedLibraries[library] = marker
+                    setupMarker(googleMap, library, presenter.isFavouriteLibrary(library))
                 }
             }
         }
     }
 
-    private suspend fun isFavouriteLibrary(library: Library): Boolean {
-        try {
-            val userRef = Firebase.firestore.collection("users")
-                .whereEqualTo("email", currentUser?.email)
-                .get()
-                .await().documents[0].reference
+    override fun setupMarker(googleMap: GoogleMap, library: Library, isFavourite: Boolean) {
+        val icon = if(isFavourite)
+            createScaledBitmap(decodeResource(requireContext().resources, R.drawable.iv_search_fav), 80, 80, false)
+        else
+            createScaledBitmap(decodeResource(requireContext().resources, R.drawable.iv_search), 80, 80, false)
+        val location = LatLng(library.location.latitude, library.location.longitude)
+        val marker = googleMap.addMarker(MarkerOptions().position(location).title(library.name))
+        marker?.apply { setIcon(fromBitmap(icon)); tag = library }
+    }
 
-            val libRef = Firebase.firestore.collection("libraries").document(library.id)
+    private fun handleNearbyLibraries(location: Location) {
+        val nearbyLibraries = HashMap<Float, Pair<Library, Marker>>()
 
-            var isFav = false
-            val userFavourites = userRef.get().await().get("favourites") as List<*>
+        for ((library, marker) in renderedLibraries) {
+            val libraryLocation = Location("")
+            libraryLocation.latitude = library.location.latitude
+            libraryLocation.longitude = library.location.longitude
+            val distance = location.distanceTo(libraryLocation)
+            if (distance <= 100)
+                nearbyLibraries[distance] = Pair(library, marker)
+        }
 
-            for (fav in userFavourites) {
-                if (fav is DocumentReference) {
-                    if (fav == libRef) {
-                        Log.i("COMPARE_REFS", "$fav vs $libRef")
-                        isFav = true
-                        break
-                    }
+        if (nearbyLibraries.isNotEmpty()) {
+            val nearestLibrary = nearbyLibraries.toSortedMap().entries.first().value
+            if (lastMarkerOpened != nearestLibrary.second) {
+                nearestLibrary.second.tag.let {
+                    val library = nearestLibrary.first
+                    val action = MapsFragmentDirections.actionMapsFragmentToLibraryDetailsFragment(library = Gson().toJson(library), coordinates = null)
+                    findNavController().navigate(action)
                 }
+                lastMarkerOpened = nearestLibrary.second
             }
-            return isFav
-
-        } catch (e: Exception) {
-            return false
         }
     }
 
